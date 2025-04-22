@@ -9,6 +9,7 @@
 - [ 🧱 Entidades](#-entidades)
 - [ 🛠️ Gestores](#-gestores)
 - [ 🧩 Interfaces](#-interfaces)
+- [ Consola - Punto de Entrada del Sistema](#)
 
 ## 📌 Objetivo General
 
@@ -408,6 +409,27 @@ El uso inadecuado de IA puede resultar en:
 Este trabajo es parte del curso de Programación Avanzada de Ingeniería en Informática. Uso educativo únicamente.
 
 </details>
+
+## 🚀 Consola - Punto de Entrada del Sistema
+
+El archivo `Consola.java` es el encargado de **iniciar** y **simular** el funcionamiento del sistema de gestión de biblioteca digital.
+
+### ¿Qué hace `Consola.java`?
+
+Este archivo cumple con las siguientes funciones:
+
+1. **Inicializa los gestores**:
+    - `GestorUsuarios`: para administrar los usuarios de la biblioteca.
+    - `GestorRecursos`: para manejar los recursos disponibles (como libros, revistas, etc.).
+
+2. **Crea objetos de prueba**:
+    - Se crean usuarios con nombre y correo electrónico.
+
+3. **Agrega los objetos a los gestores**:
+    - Los usuarios se registran en el sistema.
+
+4. **Muestra resultados por consola**:
+    - Al ejecutar el programa, se imprimen mensajes de confirmación indicando que el sistema funciona correctamente.
 
 ## 🧱 Entidades
 
