@@ -7,7 +7,7 @@
 - [👨‍🎓 Información del Alumno](#-información-del-alumno)
 - [📘 Consigna del Trabajo](#-consigna-del-trabajo)
 - [ 🧱 Entidades](#-entidades)
-- {
+- [ 🧩 Interfaces](#-intefaces)
 - [ 🧩 Interfaces](#-interfaces)
 
 ## 📌 Objetivo General
