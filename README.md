@@ -1,12 +1,23 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/tc38IXJF)
 # 📚 Trabajo Práctico: Sistema de Gestión de Biblioteca Digital (Java 21+)
 
+## 📑 Índice
+
+- [📌 Objetivo General](#-objetivo-general)
+- [👨‍🎓 Información del Alumno](#-información-del-alumno)
+- [📘 Consigna del Trabajo](#-consigna-del-trabajo)
+
 ## 📌 Objetivo General
 
 Desarrollar un sistema de gestión de biblioteca digital que implemente los cinco principios SOLID, programación orientada a objetos, y conceptos avanzados de Java. El sistema deberá manejar diferentes tipos de recursos digitales, préstamos, reservas, y notificaciones en tiempo real.
 
 ## 👨‍🎓 Información del Alumno
-- **Nombre y Apellido**: [Nombre y Apellido del Alumno]
+- **Nombre y Apellido**: Abel Carrizo
+
+## 📘 Consigna del Trabajo
+
+<details>
+<summary>📋<strong>Haz clic aquí para ver la consigna completa</strong></summary>
 
 ## 📋 Requisitos Adicionales
 
@@ -392,3 +403,5 @@ El uso inadecuado de IA puede resultar en:
 ## 📝 Licencia
 
 Este trabajo es parte del curso de Programación Avanzada de Ingeniería en Informática. Uso educativo únicamente.
+
+</details>
