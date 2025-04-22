@@ -7,6 +7,7 @@
 - [👨‍🎓 Información del Alumno](#-información-del-alumno)
 - [📘 Consigna del Trabajo](#-consigna-del-trabajo)
 - [ 🧱 Entidades](#-entidades)
+- {
 - [ 🧩 Interfaces](#-interfaces)
 
 ## 📌 Objetivo General
@@ -411,12 +412,39 @@ Este trabajo es parte del curso de Programación Avanzada de Ingeniería en Info
 ## 🧱 Entidades
 
 ### Usuario
+
 Clase que representa a un usuario dentro del sistema.
 
-- **Atributos**:
+**Atributos**:
     - `id`: Identificador único generado automáticamente (UUID).
     - `nombre`: Nombre completo del usuario.
     - `correo`: Dirección de correo electrónico del usuario.
+
+## 🛠️ Gestores
+
+### GestorUsuarios
+
+Clase responsable de gestionar los usuarios en el sistema.
+
+**Atributos**:
+
+- `usuarios`: Lista de usuarios del sistema. Esta lista puede contener un número variable de usuarios, gestionados a través de una lista dinámica (`ArrayList`).
+
+**Métodos**:
+
+- `agregarUsuario(Usuario usuario)`: Agrega un nuevo usuario a la lista de usuarios. El usuario es pasado como parámetro y se añade a la lista.
+
+### **GestorRecursos**
+
+Clase responsable de gestionar los recursos digitales en el sistema.
+
+**Atributos**:
+
+- `recursos`: Lista de recursos digitales del sistema. Esta lista también es de tamaño dinámico (`ArrayList`), permitiendo agregar recursos de manera flexible.
+
+**Métodos**:
+
+- `agregarRecurso(Recurso recurso)`: Agrega un nuevo recurso digital a la lista de recursos. El recurso es pasado como parámetro y se añade a la lista.
 
 ## 🧩 Interfaces
 
@@ -424,7 +452,8 @@ Clase que representa a un usuario dentro del sistema.
 
 Interfaz que representa un recurso digital dentro del sistema. Esta interfaz define los métodos necesarios para manejar los atributos comunes de los recursos, como libros, revistas y audiolibros. Todas las clases que representan recursos digitales deben implementar esta interfaz.
 
-- **Métodos**:
+**Métodos**:
+
 - `getId()`: Devuelve el identificador único del recurso digital. El ID es una cadena de caracteres que permite identificar el recurso de manera única dentro del sistema.
 - `getTitulo()`: Devuelve el título del recurso digital (por ejemplo, el título del libro o el nombre de la revista).
 - `getAutor()`: Devuelve el autor del recurso digital (por ejemplo, el autor del libro o la revista).
