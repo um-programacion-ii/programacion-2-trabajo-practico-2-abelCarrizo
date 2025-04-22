@@ -1,4 +1,6 @@
-package app.biblioteca;
+package app.biblioteca.gestores;
+
+import app.biblioteca.entidades.Usuario;
 
 import java.util.ArrayList;
 import java.util.List;

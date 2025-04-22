@@ -1,4 +1,4 @@
-package app.biblioteca;
+package app.biblioteca.entidades;
 
 import java.util.UUID;
 

@@ -1,4 +1,4 @@
-package app.biblioteca;
+package app.biblioteca.interfaces;
 
 public interface RecursoDigital {
     String getId();
