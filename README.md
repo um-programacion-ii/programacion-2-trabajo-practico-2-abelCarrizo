@@ -10,7 +10,7 @@
 - [ 🧱 Entidades](#-entidades)
 - [ 🛠️ Gestores](#-gestores)
 - [ 🧩 Interfaces](#-interfaces)
-- []
+- [ 📚  Recursos](#-recursos)
 
 ## 📌 Objetivo General
 
