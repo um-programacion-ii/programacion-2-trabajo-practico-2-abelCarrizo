@@ -405,3 +405,13 @@ El uso inadecuado de IA puede resultar en:
 Este trabajo es parte del curso de Programación Avanzada de Ingeniería en Informática. Uso educativo únicamente.
 
 </details>
+
+## 🧱 Entidades
+
+### Usuario
+Clase que representa a un usuario dentro del sistema.
+
+- **Atributos**:
+    - `id`: Identificador único generado automáticamente (UUID).
+    - `nombre`: Nombre completo del usuario.
+    - `correo`: Dirección de correo electrónico del usuario.
