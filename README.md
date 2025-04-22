@@ -6,10 +6,11 @@
 - [📌 Objetivo General](#-objetivo-general)
 - [👨‍🎓 Información del Alumno](#-información-del-alumno)
 - [📘 Consigna del Trabajo](#-consigna-del-trabajo)
+- [ 🚀 Consola - Punto de Entrada del Sistema](#-consola---punto-de-entrada-del-sistema)
 - [ 🧱 Entidades](#-entidades)
 - [ 🛠️ Gestores](#-gestores)
 - [ 🧩 Interfaces](#-interfaces)
-- [ 🚀 Consola - Punto de Entrada del Sistema](#-consola---punto-de-entrada-del-sistema)
+- [ 📚  Recursos](#-recursos)
 
 ## 📌 Objetivo General
 
@@ -470,7 +471,7 @@ Clase responsable de gestionar los recursos digitales en el sistema.
 
 ## 🧩 Interfaces
 
-### RecursoDigital
+### IRecursoDigital
 
 Interfaz que representa un recurso digital dentro del sistema. Esta interfaz define los métodos necesarios para manejar los atributos comunes de los recursos, como libros, revistas y audiolibros. Todas las clases que representan recursos digitales deben implementar esta interfaz.
 
@@ -483,3 +484,13 @@ Interfaz que representa un recurso digital dentro del sistema. Esta interfaz def
 - `actualizarEstado()`: Permite actualizar el estado del recurso digital. Esto es útil cuando un recurso cambia de estado, por ejemplo, cuando un libro es prestado o devuelto.
 - `getCategoria()`: Devuelve la categoría del recurso digital (por ejemplo, libro, revista, audiolibro). Esta categoría está definida en la clase `CategoriaRecurso`.
 - `mostrarInformacion()`: Muestra la información relevante del recurso digital, como el título, el autor y el estado. Este método es útil para presentar un resumen del recurso en la interfaz de usuario.
+
+## 📚  Recursos
+
+### RecursoDigital
+
+La clase `RecursoDigital` representa una **plantilla base** para todos los recursos digitales de una biblioteca.
+
+Esta clase es **abstracta**, lo que significa que **no se puede instanciar directamente**. Sirve como punto común de herencia para definir comportamientos compartidos entre los distintos tipos de recursos digitales.
+
+
