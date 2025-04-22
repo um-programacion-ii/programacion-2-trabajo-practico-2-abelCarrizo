@@ -6,6 +6,8 @@
 - [📌 Objetivo General](#-objetivo-general)
 - [👨‍🎓 Información del Alumno](#-información-del-alumno)
 - [📘 Consigna del Trabajo](#-consigna-del-trabajo)
+- [ 🧱 Entidades](#-entidades)
+- [ 🧩 Interfaces](#-interfaces)
 
 ## 📌 Objetivo General
 
@@ -415,3 +417,18 @@ Clase que representa a un usuario dentro del sistema.
     - `id`: Identificador único generado automáticamente (UUID).
     - `nombre`: Nombre completo del usuario.
     - `correo`: Dirección de correo electrónico del usuario.
+
+## 🧩 Interfaces
+
+### RecursoDigital
+
+Interfaz que representa un recurso digital dentro del sistema. Esta interfaz define los métodos necesarios para manejar los atributos comunes de los recursos, como libros, revistas y audiolibros. Todas las clases que representan recursos digitales deben implementar esta interfaz.
+
+- **Métodos**:
+- `getId()`: Devuelve el identificador único del recurso digital. El ID es una cadena de caracteres que permite identificar el recurso de manera única dentro del sistema.
+- `getTitulo()`: Devuelve el título del recurso digital (por ejemplo, el título del libro o el nombre de la revista).
+- `getAutor()`: Devuelve el autor del recurso digital (por ejemplo, el autor del libro o la revista).
+- `getEstado()`: Devuelve el estado actual del recurso digital (por ejemplo, si está disponible, prestado o reservado). Este método utiliza la clase `EstadoRecurso` para reflejar el estado del recurso.
+- `actualizarEstado()`: Permite actualizar el estado del recurso digital. Esto es útil cuando un recurso cambia de estado, por ejemplo, cuando un libro es prestado o devuelto.
+- `getCategoria()`: Devuelve la categoría del recurso digital (por ejemplo, libro, revista, audiolibro). Esta categoría está definida en la clase `CategoriaRecurso`.
+- `mostrarInformacion()`: Muestra la información relevante del recurso digital, como el título, el autor y el estado. Este método es útil para presentar un resumen del recurso en la interfaz de usuario.
