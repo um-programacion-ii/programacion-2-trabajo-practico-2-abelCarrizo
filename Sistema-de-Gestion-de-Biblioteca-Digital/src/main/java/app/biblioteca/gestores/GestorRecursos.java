@@ -1,6 +1,6 @@
 package app.biblioteca.gestores;
 
-import app.biblioteca.interfaces.RecursoDigital;
+import app.biblioteca.recursos.RecursoDigital;
 
 import java.util.ArrayList;
 import java.util.List;
