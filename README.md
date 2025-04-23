@@ -411,6 +411,8 @@ Este trabajo es parte del curso de Programación Avanzada de Ingeniería en Info
 
 </details>
 
+---
+
 ## 🚀 Consola - Punto de Entrada del Sistema
 
 El archivo `Consola.java` es el encargado de **iniciar** y **simular** el funcionamiento del sistema de gestión de biblioteca digital.
@@ -432,6 +434,8 @@ Este archivo cumple con las siguientes funciones:
 4. **Muestra resultados por consola**:
     - Al ejecutar el programa, se imprimen mensajes de confirmación indicando que el sistema funciona correctamente.
 
+---
+
 ## 🧱 Entidades
 
 ### Usuario
@@ -442,6 +446,8 @@ Clase que representa a un usuario dentro del sistema.
     - `id`: Identificador único generado automáticamente (UUID).
     - `nombre`: Nombre completo del usuario.
     - `correo`: Dirección de correo electrónico del usuario.
+
+---
 
 ## 🛠️ Gestores
 
@@ -457,6 +463,8 @@ Clase responsable de gestionar los usuarios en el sistema.
 
 - `agregarUsuario(Usuario usuario)`: Agrega un nuevo usuario a la lista de usuarios. El usuario es pasado como parámetro y se añade a la lista.
 
+---
+
 ### **GestorRecursos**
 
 Clase responsable de gestionar los recursos digitales en el sistema.
@@ -468,6 +476,8 @@ Clase responsable de gestionar los recursos digitales en el sistema.
 **Métodos**:
 
 - `agregarRecurso(Recurso recurso)`: Agrega un nuevo recurso digital a la lista de recursos. El recurso es pasado como parámetro y se añade a la lista.
+
+---
 
 ## 🧩 Interfaces
 
@@ -485,6 +495,8 @@ Interfaz que representa un recurso digital dentro del sistema. Esta interfaz def
 - `getCategoria()`: Devuelve la categoría del recurso digital (por ejemplo, libro, revista, audiolibro). Esta categoría está definida en la clase `CategoriaRecurso`.
 - `mostrarInformacion()`: Muestra la información relevante del recurso digital, como el título, el autor y el estado. Este método es útil para presentar un resumen del recurso en la interfaz de usuario.
 
+---
+
 ## 🧩 Interfaces
 
 ### Prestable
@@ -495,6 +507,8 @@ Interfaz que representa el comportamiento de préstamo de un recurso dentro del 
 
 - `disponible`: Intenta realizar el préstamo del recurso. Si el recurso ya está prestado, puede lanzar una excepción o indicar que no está disponible para préstamo.
 
+---
+
 ### Renovable
 
 Interfaz que define el comportamiento de renovación para aquellos recursos que permiten extender su período de préstamo. Esta interfaz debe ser implementada por recursos que puedan renovarse una o más veces, como libros y revistas físicas.
@@ -502,6 +516,8 @@ Interfaz que define el comportamiento de renovación para aquellos recursos que 
 **Métodos**:
 
 - `renovar()`: Renueva el período de préstamo del recurso. Puede incluir lógica para verificar si aún es posible renovar.
+
+---
 
 ## 📚 Recursos
 
@@ -528,6 +544,8 @@ Clase base abstracta que representa un recurso digital común en la biblioteca. 
 - `getAnioPublicacion() / setAnioPublicacion(int anio)`: Obtiene o modifica el año de publicación, con validación.
 - `mostrarInformacion()`: Método abstracto para mostrar información detallada. Debe implementarse en las clases concretas.
 
+---
+
 ### Libro
 
 Representa un libro digital en el sistema de la biblioteca. Hereda de `RecursoDigital` y agrega atributos propios de un libro.
@@ -540,6 +558,8 @@ Representa un libro digital en el sistema de la biblioteca. Hereda de `RecursoDi
 
 - `getNumeroPaginas() / setNumeroPaginas(int numero)`: Obtiene o modifica el número de páginas, con validación.
 - `mostrarInformacion()`: Muestra el título, autor y estado del libro.
+
+---
 
 ### Revista
 
@@ -554,6 +574,8 @@ Representa una revista digital. Hereda de `RecursoDigital` y añade información
 - `getNumeroEdicion() / setNumeroEdicion(int edicion)`: Obtiene o modifica el número de edición, con validación.
 - `mostrarInformacion()`: Muestra el título, autor y estado de la revista.
 
+---
+
 ### AudioLibro
 
 Representa un audiolibro digital en la biblioteca. Hereda de `RecursoDigital` y añade duración en horas.
@@ -566,6 +588,8 @@ Representa un audiolibro digital en la biblioteca. Hereda de `RecursoDigital` y 
 
 - `getDuracionHoras() / setDuracionHoras(int horas)`: Obtiene o modifica la duración del audiolibro, con validación.
 - `mostrarInformacion()`: Muestra el título, autor y estado del audiolibro.
+
+---
 
 ### Podcast
 
