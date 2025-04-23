@@ -485,6 +485,16 @@ Interfaz que representa un recurso digital dentro del sistema. Esta interfaz def
 - `getCategoria()`: Devuelve la categoría del recurso digital (por ejemplo, libro, revista, audiolibro). Esta categoría está definida en la clase `CategoriaRecurso`.
 - `mostrarInformacion()`: Muestra la información relevante del recurso digital, como el título, el autor y el estado. Este método es útil para presentar un resumen del recurso en la interfaz de usuario.
 
+## 🧩 Interfaces
+
+### Prestable
+
+Interfaz que representa el comportamiento de préstamo de un recurso dentro del sistema. Esta interfaz debe ser implementada por aquellos recursos que puedan ser prestados, como libros físicos o revistas.
+
+**Métodos**:
+
+- `disponible`: Intenta realizar el préstamo del recurso. Si el recurso ya está prestado, puede lanzar una excepción o indicar que no está disponible para préstamo.
+
 ## 📚 Recursos
 
 ### RecursoDigital (Clase abstracta)
