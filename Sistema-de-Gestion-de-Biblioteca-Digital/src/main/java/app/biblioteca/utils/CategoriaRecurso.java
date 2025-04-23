@@ -4,5 +4,5 @@ public enum CategoriaRecurso {
     LIBRO,
     REVISTA,
     AUDIOLIBRO,
-    PODCAST,
+    PODCAST
 }
