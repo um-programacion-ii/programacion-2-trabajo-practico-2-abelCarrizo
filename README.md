@@ -495,6 +495,14 @@ Interfaz que representa el comportamiento de préstamo de un recurso dentro del 
 
 - `disponible`: Intenta realizar el préstamo del recurso. Si el recurso ya está prestado, puede lanzar una excepción o indicar que no está disponible para préstamo.
 
+### Renovable
+
+Interfaz que define el comportamiento de renovación para aquellos recursos que permiten extender su período de préstamo. Esta interfaz debe ser implementada por recursos que puedan renovarse una o más veces, como libros y revistas físicas.
+
+**Métodos**:
+
+- `renovar()`: Renueva el período de préstamo del recurso. Puede incluir lógica para verificar si aún es posible renovar.
+
 ## 📚 Recursos
 
 ### RecursoDigital (Clase abstracta)
@@ -570,7 +578,7 @@ Clase que representa un recurso digital de tipo **Podcast** en la biblioteca.
 #### **Métodos**:
 
 - `getCantidadEpisodios()`: Retorna el número de episodios.
-- `setCantidadEpisodios(int cantidadEpisodios)`: Establece la cantidad de episodios. Valida que sea mayor a cero.
+- `setCantidadEpisodios(int cantidadEpisodios)`: Establece la cantidad de episodios. Válida que sea mayor a cero.
 - `mostrarInformacion()`: Muestra en consola los datos básicos del recurso.
 
 ### ✅ ¿Por qué se creó esta clase?
