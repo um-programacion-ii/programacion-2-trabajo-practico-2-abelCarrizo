@@ -548,3 +548,22 @@ Representa un audiolibro digital en la biblioteca. Hereda de `RecursoDigital` y 
 
 - `getDuracionHoras() / setDuracionHoras(int horas)`: Obtiene o modifica la duración del audiolibro, con validación.
 - `mostrarInformacion()`: Muestra el título, autor y estado del audiolibro.
+
+### Podcast
+
+Clase que representa un recurso digital de tipo **Podcast** en la biblioteca.
+
+#### **Atributos**:
+
+- `cantidadEpisodios`: Número total de episodios disponibles en el podcast. No puede ser menor o igual a cero.
+
+#### **Métodos**:
+
+- `getCantidadEpisodios()`: Retorna el número de episodios.
+- `setCantidadEpisodios(int cantidadEpisodios)`: Establece la cantidad de episodios. Valida que sea mayor a cero.
+- `mostrarInformacion()`: Muestra en consola los datos básicos del recurso.
+
+### ✅ ¿Por qué se creó esta clase?
+
+La clase `Podcast` fue creada **sin modificar ninguna clase existente** (ni `Libro`, `Revista`, `AudioLibro`, ni `RecursoDigital`).  
+Esto **prueba que el diseño el sistema puede escalar fácilmente, agregando nuevos tipos de recursos digitales sin romper o cambiar lo que ya funciona**.
