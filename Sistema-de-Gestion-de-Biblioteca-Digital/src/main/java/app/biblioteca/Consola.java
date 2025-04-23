@@ -1,19 +1,25 @@
 package app.biblioteca;
 
 import app.biblioteca.entidades.Usuario;
+import app.biblioteca.gestores.GestorRecursos;
+import app.biblioteca.gestores.GestorUsuarios;
+import app.biblioteca.gestores.GestorNotificaciones;
 import app.biblioteca.interfaces.Prestable;
 import app.biblioteca.interfaces.Renovable;
-import app.biblioteca.recursos.*;
+import app.biblioteca.recursos.RecursoDigital;
+import app.biblioteca.recursos.Libro;
+import app.biblioteca.recursos.Revista;
+import app.biblioteca.recursos.AudioLibro;
 import app.biblioteca.utils.CategoriaRecurso;
 import app.biblioteca.utils.EstadoRecurso;
+import app.biblioteca.servicios.ServicioNotificacionesEmail;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class Consola {
-    private final List<RecursoDigital> recursos = new ArrayList<>();
-    private final List<Usuario> usuarios = new ArrayList<>();
+    private final GestorNotificaciones notificaciones = new GestorNotificaciones(new ServicioNotificacionesEmail());
+    private final GestorRecursos gestorRecursos = new GestorRecursos();
+    private final GestorUsuarios gestorUsuarios = new GestorUsuarios(notificaciones);
 
     public static void main(String[] args) {
         new Consola().iniciar();
@@ -29,8 +35,7 @@ public class Consola {
             System.out.println("3. Prestar / Devolver / Renovar Recursos");
             System.out.println("4. Salir");
             System.out.print("Seleccione una opción: ");
-            int opcion = scanner.nextInt();
-            scanner.nextLine();
+            int opcion = scanner.nextInt(); scanner.nextLine();
 
             switch (opcion) {
                 case 1 -> menuUsuarios(scanner);
@@ -46,15 +51,19 @@ public class Consola {
     }
 
     public void menuUsuarios(Scanner scanner) {
-        System.out.print("Ingrese nombre del usuario: ");
+        System.out.print("Nombre: ");
         String nombre = scanner.nextLine();
-        System.out.print("Ingrese correo del usuario: ");
+        System.out.print("Correo: ");
         String correo = scanner.nextLine();
+        System.out.print("Teléfono: ");
+        String telefono = scanner.nextLine();
 
-        Usuario nuevoUsuario = new Usuario(nombre, correo);
-        usuarios.add(nuevoUsuario);
-        System.out.println("Usuario creado con éxito:");
-        System.out.println(nuevoUsuario.getNombre());
+        Usuario usuario = new Usuario(nombre, correo, telefono);
+        gestorUsuarios.agregarUsuario(usuario);
+
+        System.out.println("Usuario creado:");
+        System.out.println("ID: " + usuario.getId());
+        System.out.println("Nombre: " + usuario.getNombre());
     }
 
     public void menuRecursos(Scanner scanner) {
@@ -62,8 +71,7 @@ public class Consola {
         System.out.println("1. Libro");
         System.out.println("2. Revista");
         System.out.println("3. Audiolibro");
-        System.out.println("4. Podcast");
-        System.out.print("Seleccione el tipo de recurso: ");
+        System.out.print("Tipo: ");
         int tipo = scanner.nextInt(); scanner.nextLine();
 
         System.out.print("Título: ");
@@ -73,104 +81,111 @@ public class Consola {
         System.out.print("Año de publicación: ");
         int anio = scanner.nextInt(); scanner.nextLine();
 
-        CategoriaRecurso categoria = CategoriaRecurso.LITERATURA; // valor por defecto
+        CategoriaRecurso categoria = CategoriaRecurso.LITERATURA;
 
         switch (tipo) {
             case 1 -> {
-                System.out.print("Número de páginas: ");
+                System.out.print("Páginas: ");
                 int paginas = scanner.nextInt(); scanner.nextLine();
-                recursos.add(new Libro(titulo, autor, EstadoRecurso.DISPONIBLE, categoria, anio, paginas));
+                gestorRecursos.agregarRecurso(
+                        new Libro(titulo, autor, EstadoRecurso.DISPONIBLE, categoria, anio, paginas)
+                );
             }
             case 2 -> {
-                System.out.print("Número de edición: ");
+                System.out.print("Edición: ");
                 int edicion = scanner.nextInt(); scanner.nextLine();
-                recursos.add(new Revista(titulo, autor, EstadoRecurso.DISPONIBLE, categoria, anio, edicion));
+                gestorRecursos.agregarRecurso(
+                        new Revista(titulo, autor, EstadoRecurso.DISPONIBLE, categoria, anio, edicion)
+                );
             }
             case 3 -> {
-                System.out.print("Duración en horas: ");
+                System.out.print("Duración (horas): ");
                 int duracion = scanner.nextInt(); scanner.nextLine();
-                recursos.add(new AudioLibro(titulo, autor, EstadoRecurso.DISPONIBLE, categoria, anio, duracion));
+                gestorRecursos.agregarRecurso(
+                        new AudioLibro(titulo, autor, EstadoRecurso.DISPONIBLE, categoria, anio, duracion)
+                );
             }
-            case 4 -> {
-                System.out.print("Cantidad de episodios: ");
-                int episodios = scanner.nextInt(); scanner.nextLine();
-                recursos.add(new Podcast(titulo, autor, EstadoRecurso.DISPONIBLE, categoria, anio, episodios));
-            }
-            default -> System.out.println("Opción no válida.");
+            default -> System.out.println("Tipo inválido.");
         }
 
         System.out.println("Recurso creado con éxito.");
     }
 
     public void menuOperaciones(Scanner scanner) {
-        if (recursos.isEmpty()) {
-            System.out.println("No hay recursos disponibles.");
+        var lista = gestorRecursos.getRecursos();
+        if (lista.isEmpty()) {
+            System.out.println("No hay recursos.");
             return;
         }
 
-        for (int i = 0; i < recursos.size(); i++) {
-            System.out.print(i+ ". ");
-            recursos.get(i).mostrarInformacion();
+        // Mostrar recursos
+        for (int i = 0; i < lista.size(); i++) {
+            System.out.print(i + ". ");
+            lista.get(i).mostrarInformacion();
         }
 
-        System.out.print("Seleccione el recurso: ");
-        int index = scanner.nextInt(); scanner.nextLine();
-
-        if (index < 0 || index >= recursos.size()) {
+        System.out.print("Seleccione el índice: ");
+        int idx = scanner.nextInt(); scanner.nextLine();
+        if (idx < 0 || idx >= lista.size()) {
             System.out.println("Índice inválido.");
             return;
         }
 
-        RecursoDigital recurso = recursos.get(index);
+        RecursoDigital recurso = lista.get(idx);
 
-        // Mostrar las opciones disponibles según las interfaces implementadas
-        System.out.println("-- Operaciones disponibles --");
-        if (recurso instanceof Prestable) {
-            System.out.println("1. Prestar");
-            System.out.println("2. Devolver");
+        // Si puede ser prestado
+        if (recurso instanceof Prestable prestable) {
+            // Estado DISPONIBLE → solo prestar
+            if (recurso.getEstado() == EstadoRecurso.DISPONIBLE) {
+                System.out.println("1. Prestar");
+                System.out.print("Seleccione operación: ");
+                int op = scanner.nextInt(); scanner.nextLine();
+
+                if (op == 1) {
+                    prestable.prestar();
+                    notificaciones.notificar("Recurso prestado: " + recurso.getTitulo());
+                } else {
+                    System.out.println("Operación inválida.");
+                }
+                return;
+            }
+
+            // Estado PRESTADO → devolver y/o renovar
+            System.out.println("1. Devolver");
+            if (recurso instanceof Renovable) {
+                System.out.println("2. Renovar");
+            }
+            System.out.print("Seleccione operación: ");
+            int op = scanner.nextInt(); scanner.nextLine();
+
+            if (op == 1) {
+                prestable.devolver();
+                notificaciones.notificar("Recurso devuelto: " + recurso.getTitulo());
+            } else if (op == 2 && recurso instanceof Renovable renovable) {
+                renovable.renovar();
+                notificaciones.notificar("Recurso renovado: " + recurso.getTitulo());
+            } else {
+                System.out.println("Operación inválida.");
+            }
+            return;
         }
+
+        // Si no es prestable pero es renovable (raro, pero por si acaso)
         if (recurso instanceof Renovable) {
-            System.out.println("3. Renovar");
+            System.out.println("Solo se puede renovar un recurso prestado.");
+            if (recurso.getEstado() == EstadoRecurso.PRESTADO) {
+                System.out.print("¿Renovar? (s/n): ");
+                if (scanner.nextLine().equalsIgnoreCase("s")) {
+                    ((Renovable) recurso).renovar();
+                    notificaciones.notificar("Recurso renovado: " + recurso.getTitulo());
+                }
+            } else {
+                System.out.println("Este recurso no está prestado.");
+            }
+            return;
         }
 
-        System.out.print("Seleccione operación: ");
-        int op = scanner.nextInt(); scanner.nextLine();
-
-        switch (op) {
-            case 1 -> {
-                if (recurso instanceof Prestable prestable) {
-                    if (recurso.getEstado() == EstadoRecurso.DISPONIBLE) {
-                        prestable.prestar();
-                    } else {
-                        System.out.println("Este recurso ya está prestado.");
-                    }
-                } else {
-                    System.out.println("Este recurso no se puede prestar.");
-                }
-            }
-            case 2 -> {
-                if (recurso instanceof Prestable prestable) {
-                    if (recurso.getEstado() == EstadoRecurso.PRESTADO) {
-                        prestable.devolver();
-                    } else {
-                        System.out.println("Este recurso no está prestado. No se puede devolver.");
-                    }
-                } else {
-                    System.out.println("Este recurso no se puede devolver.");
-                }
-            }
-            case 3 -> {
-                if (recurso instanceof Renovable renovable) {
-                    if (recurso.getEstado() == EstadoRecurso.PRESTADO) {
-                        renovable.renovar();
-                    } else {
-                        System.out.println("Este recurso no está prestado. No se puede renovar.");
-                    }
-                } else {
-                    System.out.println("Este recurso no se puede renovar.");
-                }
-            }
-            default -> System.out.println("Operación inválida.");
-        }
+        // Si no es ni prestable ni renovable
+        System.out.println("Este recurso no tiene operaciones disponibles.");
     }
 }
