@@ -85,26 +85,44 @@ public class Consola {
         System.out.print("Año de publicación: ");
         int anio = scanner.nextInt(); scanner.nextLine();
 
+        // —— Selección de categoría ——
+        System.out.println("Seleccione categoría:");
+        CategoriaRecurso[] cats = CategoriaRecurso.values();
+        for (int i = 0; i < cats.length; i++) {
+            System.out.printf("%d. %s%n", i + 1, cats[i]);
+        }
+        System.out.print("Opción: ");
+        int ci = scanner.nextInt(); scanner.nextLine();
+
+        CategoriaRecurso categoria;
+        if (ci >= 1 && ci <= cats.length) {
+            categoria = cats[ci - 1];
+        } else {
+            System.out.println("Categoría inválida, se asigna LIBRO por defecto.");
+            categoria = CategoriaRecurso.LIBRO;
+        }
+
+        // —— Creación según tipo ——
         switch (tipo) {
             case 1 -> {
                 System.out.print("Páginas: ");
                 int paginas = scanner.nextInt(); scanner.nextLine();
                 gestorRecursos.agregarRecurso(
-                        new Libro(titulo, autor, EstadoRecurso.DISPONIBLE, CategoriaRecurso.LIBRO, anio, paginas)
+                        new Libro(titulo, autor, EstadoRecurso.DISPONIBLE, categoria, anio, paginas)
                 );
             }
             case 2 -> {
                 System.out.print("Edición: ");
                 int edicion = scanner.nextInt(); scanner.nextLine();
                 gestorRecursos.agregarRecurso(
-                        new Revista(titulo, autor, EstadoRecurso.DISPONIBLE, CategoriaRecurso.REVISTA, anio, edicion)
+                        new Revista(titulo, autor, EstadoRecurso.DISPONIBLE, categoria, anio, edicion)
                 );
             }
             case 3 -> {
                 System.out.print("Duración (horas): ");
                 int duracion = scanner.nextInt(); scanner.nextLine();
                 gestorRecursos.agregarRecurso(
-                        new AudioLibro(titulo, autor, EstadoRecurso.DISPONIBLE, CategoriaRecurso.AUDIOLIBRO, anio, duracion)
+                        new AudioLibro(titulo, autor, EstadoRecurso.DISPONIBLE, categoria, anio, duracion)
                 );
             }
             default -> System.out.println("Tipo inválido.");
