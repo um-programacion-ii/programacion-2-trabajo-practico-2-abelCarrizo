@@ -24,7 +24,6 @@ public class GestorRecursos {
                 .findFirst().orElse(null);
     }
 
-
     /** Busca todos los recursos cuyo título contenga `texto` (case-insensitive). */
     public List<RecursoDigital> buscarPorTitulo(String texto) {
         String filtro = texto.toLowerCase();
