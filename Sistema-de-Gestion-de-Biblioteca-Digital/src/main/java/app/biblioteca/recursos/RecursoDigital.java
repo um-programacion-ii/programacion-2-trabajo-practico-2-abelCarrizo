@@ -106,6 +106,12 @@ public abstract class RecursoDigital implements IRecursoDigital {
         this.anioPublicacion = anioPublicacion;
     }
 
-    @Override
-    public abstract void mostrarInformacion(); // cada clase concreta lo define
+    public void mostrarInformacionBasica() {
+        System.out.println("Título: " + this.titulo);
+        System.out.println("Autor: " + this.autor);
+        System.out.println("Estado: " + this.estado);
+        System.out.println("Categoría: " + this.categoria);
+        System.out.println("Año de publicación: " + this.anioPublicacion);
+    }
 }
+
