@@ -452,31 +452,40 @@ Clase que representa a un usuario dentro del sistema.
 
 ## 🛠️ Gestores
 
+Este módulo está diseñado para gestionar usuarios y recursos digitales en un sistema de biblioteca. Utiliza estructuras de datos como `HashMap` y `ArrayList` para almacenar los datos de usuarios y recursos, respectivamente. Además, se integra con un sistema de notificaciones para informar sobre eventos importantes.
+
 ### GestorUsuarios
+Esta clase es responsable de gestionar los usuarios del sistema. Permite agregar usuarios, buscarlos por su ID o nombre, y listar todos los usuarios registrados.
 
-Clase responsable de gestionar los usuarios en el sistema.
+#### Métodos:
+- `agregarUsuario(Usuario usuario)`: Agrega un nuevo usuario al sistema y envía una notificación de creación.
+- `buscarPorId(String id)`: Busca un usuario por su ID y devuelve la instancia de `Usuario`.
+- `buscarPorNombre(String nombre)`: Busca un usuario por su nombre y devuelve la instancia de `Usuario` si se encuentra.
+- `listarUsuarios()`: Muestra todos los usuarios registrados en la consola.
 
-**Atributos**:
-
-- `usuarios`: Lista de usuarios del sistema. Esta lista puede contener un número variable de usuarios, gestionados a través de una lista dinámica (`ArrayList`).
-
-**Métodos**:
-
-- `agregarUsuario(Usuario usuario)`: Agrega un nuevo usuario a la lista de usuarios. El usuario es pasado como parámetro y se añade a la lista.
+**Dependencias**:
+- `GestorNotificaciones`: Para enviar notificaciones cuando se agrega un nuevo usuario.
 
 ---
 
-### **GestorRecursos**
+### GestorRecursos
+Esta clase gestiona los recursos digitales (como libros, revistas, etc.) dentro del sistema. Permite agregar recursos, buscarlos por su ID y listar todos los recursos disponibles.
 
-Clase responsable de gestionar los recursos digitales en el sistema.
+#### Métodos:
+- `agregarRecurso(RecursoDigital recurso)`: Agrega un nuevo recurso digital al sistema.
+- `buscarPorId(String id)`: Busca un recurso digital por su ID y devuelve la instancia correspondiente de `RecursoDigital`.
+- `listarRecursos()`: Muestra todos los recursos registrados en la consola.
 
-**Atributos**:
+---
 
-- `recursos`: Lista de recursos digitales del sistema. Esta lista también es de tamaño dinámico (`ArrayList`), permitiendo agregar recursos de manera flexible.
+### GestorNotificaciones
+Esta clase es responsable de gestionar el sistema de notificaciones, enviando mensajes de notificación a través de un servicio de notificación determinado (como email o SMS).
 
-**Métodos**:
+#### Métodos:
+- `notificar(String mensaje)`: Envía una notificación con el mensaje especificado usando el servicio de notificaciones configurado.
 
-- `agregarRecurso(Recurso recurso)`: Agrega un nuevo recurso digital a la lista de recursos. El recurso es pasado como parámetro y se añade a la lista.
+**Dependencias**:
+- `ServicioNotificaciones`: Interfaz que define el servicio utilizado para enviar las notificaciones.
 
 ---
 
