@@ -1,155 +1,176 @@
 package app.biblioteca;
 
-import app.biblioteca.recursos.AudioLibro;
-import app.biblioteca.recursos.Libro;
-import app.biblioteca.recursos.Revista;
-import app.biblioteca.recursos.Podcast;
+import app.biblioteca.entidades.Usuario;
+import app.biblioteca.interfaces.Prestable;
+import app.biblioteca.interfaces.Renovable;
+import app.biblioteca.recursos.*;
 import app.biblioteca.utils.CategoriaRecurso;
 import app.biblioteca.utils.EstadoRecurso;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Consola {
+    private final List<RecursoDigital> recursos = new ArrayList<>();
+    private final List<Usuario> usuarios = new ArrayList<>();
 
-    // Metodo principal que ejecuta el programa
     public static void main(String[] args) {
-        Consola consola = new Consola();
-        consola.iniciar();
+        new Consola().iniciar();
     }
 
-    // Metodo para iniciar la interacción con el usuario
     public void iniciar() {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            // Mostrar menú
-            System.out.println("Menú de opciones:");
-            System.out.println("1. Crear Libro");
-            System.out.println("2. Crear Revista");
-            System.out.println("3. Crear AudioLibro");
-            System.out.println("4. Crear Podcast");
-            System.out.println("5. Salir");
-
-            // Recoger la opción del usuario
-            System.out.print("Seleccione una opción (1-5): ");
+            System.out.println("-- Menú de opciones --");
+            System.out.println("1. Gestionar Usuarios");
+            System.out.println("2. Gestionar Recursos");
+            System.out.println("3. Prestar / Devolver / Renovar Recursos");
+            System.out.println("4. Salir");
+            System.out.print("Seleccione una opción: ");
             int opcion = scanner.nextInt();
-            scanner.nextLine();  // Consumir la nueva línea
+            scanner.nextLine();
 
             switch (opcion) {
-                case 1:
-                    crearLibro(scanner);
-                    break;
-                case 2:
-                    crearRevista(scanner);
-                    break;
-                case 3:
-                    crearAudioLibro(scanner);
-                    break;
-                case 4:
-                    crearPodcast(scanner);
-                    break;
-                case 5:
+                case 1 -> menuUsuarios(scanner);
+                case 2 -> menuRecursos(scanner);
+                case 3 -> menuOperaciones(scanner);
+                case 4 -> {
                     System.out.println("¡Hasta luego!");
                     return;
-                default:
-                    System.out.println("Opción no válida. Intente nuevamente.");
+                }
+                default -> System.out.println("Opción no válida.");
             }
         }
     }
 
-    // Metodo para crear un libro
-    public void crearLibro(Scanner scanner) {
-        System.out.print("Ingrese el título del libro: ");
-        String titulo = scanner.nextLine();
+    public void menuUsuarios(Scanner scanner) {
+        System.out.print("Ingrese nombre del usuario: ");
+        String nombre = scanner.nextLine();
+        System.out.print("Ingrese correo del usuario: ");
+        String correo = scanner.nextLine();
 
-        System.out.print("Ingrese el autor del libro: ");
-        String autor = scanner.nextLine();
-
-        System.out.print("Ingrese el año de publicación: ");
-        int anioPublicacion = scanner.nextInt();
-        scanner.nextLine(); // Consumir la nueva línea
-
-        // Usamos un valor predeterminado para el estado y la categoría
-        EstadoRecurso estado = EstadoRecurso.DISPONIBLE;
-        CategoriaRecurso categoria = CategoriaRecurso.LITERATURA;
-
-        System.out.print("Ingrese el número de páginas: ");
-        int numeroPaginas = scanner.nextInt();
-        scanner.nextLine(); // Consumir la nueva línea
-
-        Libro libro = new Libro(titulo, autor, estado, categoria, anioPublicacion, numeroPaginas);
-        libro.mostrarInformacion();
+        Usuario nuevoUsuario = new Usuario(nombre, correo);
+        usuarios.add(nuevoUsuario);
+        System.out.println("Usuario creado con éxito:");
+        System.out.println(nuevoUsuario.getNombre());
     }
 
-    // Metodo para crear una revista
-    public void crearRevista(Scanner scanner) {
-        System.out.print("Ingrese el título de la revista: ");
+    public void menuRecursos(Scanner scanner) {
+        System.out.println("--- Crear Recurso ---");
+        System.out.println("1. Libro");
+        System.out.println("2. Revista");
+        System.out.println("3. Audiolibro");
+        System.out.println("4. Podcast");
+        System.out.print("Seleccione el tipo de recurso: ");
+        int tipo = scanner.nextInt(); scanner.nextLine();
+
+        System.out.print("Título: ");
         String titulo = scanner.nextLine();
-
-        System.out.print("Ingrese el autor de la revista: ");
+        System.out.print("Autor: ");
         String autor = scanner.nextLine();
+        System.out.print("Año de publicación: ");
+        int anio = scanner.nextInt(); scanner.nextLine();
 
-        System.out.print("Ingrese el año de publicación: ");
-        int anioPublicacion = scanner.nextInt();
-        scanner.nextLine();
+        CategoriaRecurso categoria = CategoriaRecurso.LITERATURA; // valor por defecto
 
-        // Usamos un valor predeterminado para el estado y la categoría
-        EstadoRecurso estado = EstadoRecurso.DISPONIBLE;
-        CategoriaRecurso categoria = CategoriaRecurso.ENTRETENIMIENTO;
+        switch (tipo) {
+            case 1 -> {
+                System.out.print("Número de páginas: ");
+                int paginas = scanner.nextInt(); scanner.nextLine();
+                recursos.add(new Libro(titulo, autor, EstadoRecurso.DISPONIBLE, categoria, anio, paginas));
+            }
+            case 2 -> {
+                System.out.print("Número de edición: ");
+                int edicion = scanner.nextInt(); scanner.nextLine();
+                recursos.add(new Revista(titulo, autor, EstadoRecurso.DISPONIBLE, categoria, anio, edicion));
+            }
+            case 3 -> {
+                System.out.print("Duración en horas: ");
+                int duracion = scanner.nextInt(); scanner.nextLine();
+                recursos.add(new AudioLibro(titulo, autor, EstadoRecurso.DISPONIBLE, categoria, anio, duracion));
+            }
+            case 4 -> {
+                System.out.print("Cantidad de episodios: ");
+                int episodios = scanner.nextInt(); scanner.nextLine();
+                recursos.add(new Podcast(titulo, autor, EstadoRecurso.DISPONIBLE, categoria, anio, episodios));
+            }
+            default -> System.out.println("Opción no válida.");
+        }
 
-        System.out.print("Ingrese el número de edición: ");
-        int numeroEdicion = scanner.nextInt();
-        scanner.nextLine();
-
-        Revista revista = new Revista(titulo, autor, estado, categoria, anioPublicacion, numeroEdicion);
-        revista.mostrarInformacion();
+        System.out.println("Recurso creado con éxito.");
     }
 
-    // Metodo para crear un audio libro
-    public void crearAudioLibro(Scanner scanner) {
-        System.out.print("Ingrese el título del audio libro: ");
-        String titulo = scanner.nextLine();
+    public void menuOperaciones(Scanner scanner) {
+        if (recursos.isEmpty()) {
+            System.out.println("No hay recursos disponibles.");
+            return;
+        }
 
-        System.out.print("Ingrese el autor del audio libro: ");
-        String autor = scanner.nextLine();
+        for (int i = 0; i < recursos.size(); i++) {
+            System.out.print(i+ ". ");
+            recursos.get(i).mostrarInformacion();
+        }
 
-        System.out.print("Ingrese el año de publicación: ");
-        int anioPublicacion = scanner.nextInt();
-        scanner.nextLine();
+        System.out.print("Seleccione el recurso: ");
+        int index = scanner.nextInt(); scanner.nextLine();
 
-        // Usamos un valor predeterminado para el estado y la categoría
-        EstadoRecurso estado = EstadoRecurso.DISPONIBLE;
-        CategoriaRecurso categoria = CategoriaRecurso.ENTRETENIMIENTO;
+        if (index < 0 || index >= recursos.size()) {
+            System.out.println("Índice inválido.");
+            return;
+        }
 
-        System.out.print("Ingrese la duración del audio libro: ");
-        int duracionHoras = scanner.nextInt();
-        scanner.nextLine();
+        RecursoDigital recurso = recursos.get(index);
 
-        AudioLibro audiolibro = new AudioLibro(titulo, autor, estado, categoria, anioPublicacion, duracionHoras);
-        audiolibro.mostrarInformacion();
-    }
+        // Mostrar las opciones disponibles según las interfaces implementadas
+        System.out.println("-- Operaciones disponibles --");
+        if (recurso instanceof Prestable) {
+            System.out.println("1. Prestar");
+            System.out.println("2. Devolver");
+        }
+        if (recurso instanceof Renovable) {
+            System.out.println("3. Renovar");
+        }
 
-    // Metodo para crear un podcast
-    public void crearPodcast(Scanner scanner) {
-        System.out.print("Ingrese el título del podcast: ");
-        String titulo = scanner.nextLine();
+        System.out.print("Seleccione operación: ");
+        int op = scanner.nextInt(); scanner.nextLine();
 
-        System.out.print("Ingrese el autor del podcast: ");
-        String autor = scanner.nextLine();
-
-        System.out.print("Ingrese el año de publicación: ");
-        int anioPublicacion = scanner.nextInt();
-        scanner.nextLine();
-
-        // Usamos un valor predeterminado para el estado y la categoría
-        EstadoRecurso estado = EstadoRecurso.DISPONIBLE;  // Supuesto
-        CategoriaRecurso categoria = CategoriaRecurso.CIENCIA;  // Supuesto
-
-        System.out.print("Ingrese la duración en horas del podcast: ");
-        int duracionHoras = scanner.nextInt();
-        scanner.nextLine();
-
-        Podcast podcast = new Podcast(titulo, autor, estado, categoria, anioPublicacion, duracionHoras);
-        podcast.mostrarInformacion();
+        switch (op) {
+            case 1 -> {
+                if (recurso instanceof Prestable prestable) {
+                    if (recurso.getEstado() == EstadoRecurso.DISPONIBLE) {
+                        prestable.prestar();
+                    } else {
+                        System.out.println("Este recurso ya está prestado.");
+                    }
+                } else {
+                    System.out.println("Este recurso no se puede prestar.");
+                }
+            }
+            case 2 -> {
+                if (recurso instanceof Prestable prestable) {
+                    if (recurso.getEstado() == EstadoRecurso.PRESTADO) {
+                        prestable.devolver();
+                    } else {
+                        System.out.println("Este recurso no está prestado. No se puede devolver.");
+                    }
+                } else {
+                    System.out.println("Este recurso no se puede devolver.");
+                }
+            }
+            case 3 -> {
+                if (recurso instanceof Renovable renovable) {
+                    if (recurso.getEstado() == EstadoRecurso.PRESTADO) {
+                        renovable.renovar();
+                    } else {
+                        System.out.println("Este recurso no está prestado. No se puede renovar.");
+                    }
+                } else {
+                    System.out.println("Este recurso no se puede renovar.");
+                }
+            }
+            default -> System.out.println("Operación inválida.");
+        }
     }
 }
