@@ -105,7 +105,7 @@ public class Consola {
         revista.mostrarInformacion();
     }
 
-    // Metodo para crear una audio libro
+    // Metodo para crear un audio libro
     public void crearAudioLibro(Scanner scanner) {
         System.out.print("Ingrese el título del audio libro: ");
         String titulo = scanner.nextLine();
