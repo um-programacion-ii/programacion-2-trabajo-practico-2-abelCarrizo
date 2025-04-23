@@ -11,6 +11,7 @@
 - [ 🛠️ Gestores](#-gestores)
 - [ 🧩 Interfaces](#-interfaces)
 - [ 📚  Recursos](#-recursos)
+- [ ⚙️ Servicios](#-servicios)
 
 ## 📌 Objetivo General
 
@@ -497,15 +498,14 @@ Interfaz que representa un recurso digital dentro del sistema. Esta interfaz def
 
 ---
 
-## 🧩 Interfaces
-
 ### Prestable
 
 Interfaz que representa el comportamiento de préstamo de un recurso dentro del sistema. Esta interfaz debe ser implementada por aquellos recursos que puedan ser prestados, como libros físicos o revistas.
 
 **Métodos**:
 
-- `disponible`: Intenta realizar el préstamo del recurso. Si el recurso ya está prestado, puede lanzar una excepción o indicar que no está disponible para préstamo.
+- `prestar()`: Intenta realizar el préstamo del recurso. Si el recurso ya está prestado, puede lanzar una excepción o indicar que no está disponible para préstamo.
+- `devolver()`: Intenta realizar la devolución del recurso. Si el recurso ya está devuelto o no se ha prestado, puede lanzar una excepción o indicar que no está disponible para préstamo.
 
 ---
 
@@ -516,6 +516,14 @@ Interfaz que define el comportamiento de renovación para aquellos recursos que 
 **Métodos**:
 
 - `renovar()`: Renueva el período de préstamo del recurso. Puede incluir lógica para verificar si aún es posible renovar.
+
+---
+
+### `ServicioNotificaciones`
+
+Interfaz que define el contrato para servicios de notificaciones dentro del sistema. Permite abstraer el mecanismo de envío de mensajes a los usuarios, ya sea por correo electrónico, SMS u otro medio.
+
+Esta interfaz permite aplicar el Principio de Inversión de Dependencias (DIP), permitiendo que las clases que envían notificaciones trabajen con una abstracción y no con una implementación concreta.
 
 ---
 
@@ -609,3 +617,29 @@ Clase que representa un recurso digital de tipo **Podcast** en la biblioteca.
 
 La clase `Podcast` fue creada **sin modificar ninguna clase existente** (ni `Libro`, `Revista`, `AudioLibro`, ni `RecursoDigital`).  
 Esto **prueba que el diseño el sistema puede escalar fácilmente, agregando nuevos tipos de recursos digitales sin romper o cambiar lo que ya funciona**.
+
+---
+
+## ⚙️ Servicios
+
+### `ServicioNotificacionesSMS`
+
+Implementación de `ServicioNotificaciones` que simula el envío de notificaciones mediante mensajes SMS.
+
+**Características:**
+
+- Imprime en consola los mensajes simulando el envío por SMS.
+- Ideal para representar un canal de notificación rápido y directo.
+
+---
+
+### `ServicioNotificacionesEmail`
+
+Implementación de `ServicioNotificaciones` que simula el envío de notificaciones por correo electrónico.
+
+**Características:**
+
+- Muestra en consola los mensajes simulando el envío por email.
+- Representa un canal más formal o informativo para los usuarios.
+
+---

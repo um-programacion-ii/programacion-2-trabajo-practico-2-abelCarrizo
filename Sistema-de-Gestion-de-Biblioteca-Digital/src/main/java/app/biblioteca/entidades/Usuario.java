@@ -6,11 +6,13 @@ public class Usuario {
     private final String id;
     private String nombre;
     private String correo;
+    private String telefono;
 
-    public Usuario(String nombre, String correo) {
+    public Usuario(String nombre, String correo, String telefono) {
         this.id = UUID.randomUUID().toString();
         this.nombre = nombre;
         this.correo = correo;
+        this.telefono = telefono;
     }
 
     public String getId() {
@@ -31,5 +33,13 @@ public class Usuario {
 
     public void setCorreo(String correo) {
         this.correo = correo;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
     }
 }
