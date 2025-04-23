@@ -481,16 +481,70 @@ Interfaz que representa un recurso digital dentro del sistema. Esta interfaz def
 - `getTitulo()`: Devuelve el título del recurso digital (por ejemplo, el título del libro o el nombre de la revista).
 - `getAutor()`: Devuelve el autor del recurso digital (por ejemplo, el autor del libro o la revista).
 - `getEstado()`: Devuelve el estado actual del recurso digital (por ejemplo, si está disponible, prestado o reservado). Este método utiliza la clase `EstadoRecurso` para reflejar el estado del recurso.
-- `actualizarEstado()`: Permite actualizar el estado del recurso digital. Esto es útil cuando un recurso cambia de estado, por ejemplo, cuando un libro es prestado o devuelto.
+- `setEstado()`: Permite actualizar el estado del recurso digital. Esto es útil cuando un recurso cambia de estado, por ejemplo, cuando un libro es prestado o devuelto.
 - `getCategoria()`: Devuelve la categoría del recurso digital (por ejemplo, libro, revista, audiolibro). Esta categoría está definida en la clase `CategoriaRecurso`.
 - `mostrarInformacion()`: Muestra la información relevante del recurso digital, como el título, el autor y el estado. Este método es útil para presentar un resumen del recurso en la interfaz de usuario.
 
-## 📚  Recursos
+## 📚 Recursos
 
-### RecursoDigital
+### RecursoDigital (Clase abstracta)
 
-La clase `RecursoDigital` representa una **plantilla base** para todos los recursos digitales de una biblioteca.
+Clase base abstracta que representa un recurso digital común en la biblioteca. Define atributos y comportamientos generales que comparten todos los tipos de recursos digitales.
 
-Esta clase es **abstracta**, lo que significa que **no se puede instanciar directamente**. Sirve como punto común de herencia para definir comportamientos compartidos entre los distintos tipos de recursos digitales.
+**Atributos**:
 
+- `id`: Identificador único generado automáticamente para cada recurso (UUID).
+- `titulo`: Título del recurso. No puede estar vacío o ser nulo.
+- `autor`: Nombre del autor. No puede estar vacío o ser nulo.
+- `estado`: Estado del recurso (disponible, prestado, etc.). No puede ser nulo.
+- `categoria`: Categoría del recurso. No puede ser nulo.
+- `anioPublicacion`: Año de publicación. Debe ser mayor a 0 y no superior al año actual.
 
+**Métodos**:
+
+- `getId()`: Retorna el identificador único del recurso.
+- `getTitulo() / setTitulo(String titulo)`: Obtiene o modifica el título, con validación.
+- `getAutor() / setAutor(String autor)`: Obtiene o modifica el autor, con validación.
+- `getEstado() / setEstado(EstadoRecurso estado)`: Obtiene o modifica el estado del recurso.
+- `getCategoria() / setCategoria(CategoriaRecurso categoria)`: Obtiene o modifica la categoría del recurso.
+- `getAnioPublicacion() / setAnioPublicacion(int anio)`: Obtiene o modifica el año de publicación, con validación.
+- `mostrarInformacion()`: Método abstracto para mostrar información detallada. Debe implementarse en las clases concretas.
+
+### Libro
+
+Representa un libro digital en el sistema de la biblioteca. Hereda de `RecursoDigital` y agrega atributos propios de un libro.
+
+**Atributos**:
+
+- `numeroPaginas`: Número total de páginas del libro. Debe ser mayor a 0.
+
+**Métodos**:
+
+- `getNumeroPaginas() / setNumeroPaginas(int numero)`: Obtiene o modifica el número de páginas, con validación.
+- `mostrarInformacion()`: Muestra el título, autor y estado del libro.
+
+### Revista
+
+Representa una revista digital. Hereda de `RecursoDigital` y añade información de edición.
+
+**Atributos**:
+
+- `numeroEdicion`: Número de edición de la revista. Debe ser mayor a 0.
+
+**Métodos**:
+
+- `getNumeroEdicion() / setNumeroEdicion(int edicion)`: Obtiene o modifica el número de edición, con validación.
+- `mostrarInformacion()`: Muestra el título, autor y estado de la revista.
+
+### AudioLibro
+
+Representa un audiolibro digital en la biblioteca. Hereda de `RecursoDigital` y añade duración en horas.
+
+**Atributos**:
+
+- `duracionHoras`: Duración total del audiolibro en horas. Debe ser mayor a 0.
+
+**Métodos**:
+
+- `getDuracionHoras() / setDuracionHoras(int horas)`: Obtiene o modifica la duración del audiolibro, con validación.
+- `mostrarInformacion()`: Muestra el título, autor y estado del audiolibro.
