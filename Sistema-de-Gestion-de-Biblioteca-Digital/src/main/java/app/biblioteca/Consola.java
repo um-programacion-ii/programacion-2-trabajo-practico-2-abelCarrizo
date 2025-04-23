@@ -11,9 +11,11 @@ import app.biblioteca.recursos.Libro;
 import app.biblioteca.recursos.Revista;
 import app.biblioteca.recursos.AudioLibro;
 import app.biblioteca.utils.CategoriaRecurso;
+import app.biblioteca.utils.ComparadorRecurso;
 import app.biblioteca.utils.EstadoRecurso;
 import app.biblioteca.servicios.ServicioNotificacionesEmail;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class Consola {
@@ -32,16 +34,18 @@ public class Consola {
             System.out.println("-- Menú de opciones --");
             System.out.println("1. Gestionar Usuarios");
             System.out.println("2. Gestionar Recursos");
-            System.out.println("3. Prestar / Devolver / Renovar Recursos");
-            System.out.println("4. Salir");
+            System.out.println("3. Buscar Recursos");
+            System.out.println("4. Prestar / Devolver / Renovar Recursos");
+            System.out.println("5. Salir");
             System.out.print("Seleccione una opción: ");
             int opcion = scanner.nextInt(); scanner.nextLine();
 
             switch (opcion) {
                 case 1 -> menuUsuarios(scanner);
                 case 2 -> menuRecursos(scanner);
-                case 3 -> menuOperaciones(scanner);
-                case 4 -> {
+                case 3 -> menuBusqueda(scanner);
+                case 4 -> menuOperaciones(scanner);
+                case 5 -> {
                     System.out.println("¡Hasta luego!");
                     return;
                 }
@@ -81,34 +85,96 @@ public class Consola {
         System.out.print("Año de publicación: ");
         int anio = scanner.nextInt(); scanner.nextLine();
 
-        CategoriaRecurso categoria = CategoriaRecurso.LITERATURA;
-
         switch (tipo) {
             case 1 -> {
                 System.out.print("Páginas: ");
                 int paginas = scanner.nextInt(); scanner.nextLine();
                 gestorRecursos.agregarRecurso(
-                        new Libro(titulo, autor, EstadoRecurso.DISPONIBLE, categoria, anio, paginas)
+                        new Libro(titulo, autor, EstadoRecurso.DISPONIBLE, CategoriaRecurso.LIBRO, anio, paginas)
                 );
             }
             case 2 -> {
                 System.out.print("Edición: ");
                 int edicion = scanner.nextInt(); scanner.nextLine();
                 gestorRecursos.agregarRecurso(
-                        new Revista(titulo, autor, EstadoRecurso.DISPONIBLE, categoria, anio, edicion)
+                        new Revista(titulo, autor, EstadoRecurso.DISPONIBLE, CategoriaRecurso.REVISTA, anio, edicion)
                 );
             }
             case 3 -> {
                 System.out.print("Duración (horas): ");
                 int duracion = scanner.nextInt(); scanner.nextLine();
                 gestorRecursos.agregarRecurso(
-                        new AudioLibro(titulo, autor, EstadoRecurso.DISPONIBLE, categoria, anio, duracion)
+                        new AudioLibro(titulo, autor, EstadoRecurso.DISPONIBLE, CategoriaRecurso.AUDIOLIBRO, anio, duracion)
                 );
             }
             default -> System.out.println("Tipo inválido.");
         }
 
         System.out.println("Recurso creado con éxito.");
+    }
+
+    private void menuBusqueda(Scanner scanner) {
+        while (true) {
+            System.out.println("--- Búsqueda de Recursos ---");
+            System.out.println("1. Buscar por Título");
+            System.out.println("2. Filtrar por Categoría");
+            System.out.println("3. Ordenar Recursos");
+            System.out.println("4. Volver");
+            System.out.print("Seleccione una opción: ");
+            int opc = scanner.nextInt(); scanner.nextLine();
+
+            switch (opc) {
+                case 1 -> {
+                    System.out.print("Ingrese texto a buscar en el título: ");
+                    String texto = scanner.nextLine();
+                    var resultados = gestorRecursos.buscarPorTitulo(texto);
+                    System.out.println("== Resultados (" + resultados.size() + ") ==");
+                    resultados.forEach(RecursoDigital::mostrarInformacion);
+                }
+                case 2 -> {
+                    System.out.println("Seleccione categoría:");
+                    var cats = CategoriaRecurso.values();
+                    for (int i = 0; i < cats.length; i++) {
+                        System.out.printf("%d. %s%n", i+1, cats[i]);
+                    }
+                    System.out.print("Opción: ");
+                    int ci = scanner.nextInt(); scanner.nextLine();
+                    if (ci >= 1 && ci <= cats.length) {
+                        var fil = gestorRecursos.filtrarPorCategoria(cats[ci-1]);
+                        System.out.println("== Recursos en " + cats[ci-1] + " (" + fil.size() + ") ==");
+                        fil.forEach(RecursoDigital::mostrarInformacion);
+                    } else {
+                        System.out.println("Categoría inválida.");
+                    }
+                }
+                case 3 -> {
+                    System.out.println("Ordenar por:");
+                    System.out.println("1. Título");
+                    System.out.println("2. Año de publicación");
+                    System.out.println("3. Autor");
+                    System.out.print("Opción: ");
+                    int oi = scanner.nextInt(); scanner.nextLine();
+
+                    List<RecursoDigital> ordenados;
+                    switch (oi) {
+                        case 1 -> ordenados = gestorRecursos.ordenarRecursos(ComparadorRecurso.POR_TITULO);
+                        case 2 -> ordenados = gestorRecursos.ordenarRecursos(ComparadorRecurso.POR_ANIO);
+                        case 3 -> ordenados = gestorRecursos.ordenarRecursos(ComparadorRecurso.POR_AUTOR);
+                        default -> {
+                            System.out.println("Opción inválida.");
+                            continue;
+                        }
+                    }
+                    System.out.println("== Recursos Ordenados ==");
+                    ordenados.forEach(RecursoDigital::mostrarInformacion);
+                }
+                case 4 -> {
+                    // vuelve al menú principal
+                    return;
+                }
+                default -> System.out.println("Opción no válida.");
+            }
+        }
     }
 
     public void menuOperaciones(Scanner scanner) {
