@@ -24,7 +24,10 @@ public class Podcast extends RecursoDigital {
 
     @Override
     public void mostrarInformacion() {
-        System.out.println("Podcast: " + titulo + " por " + autor + " [" + estado + "]");
+        System.out.println("---------- Podcast ----------");
+        super.mostrarInformacionBasica();
+        System.out.println("cantidadEpisodios: " + this.cantidadEpisodios);
+        System.out.println("-----------------------------");
     }
 }
 

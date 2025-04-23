@@ -24,7 +24,10 @@ public class Revista extends RecursoDigital {
 
     @Override
     public void mostrarInformacion() {
-        System.out.println("Revista: " + titulo + " por " + autor + " [" + estado + "]");
+        System.out.println("---------- Revista ----------");
+        super.mostrarInformacionBasica();
+        System.out.println("Edicion: " + this.numeroEdicion);
+        System.out.println("-----------------------------");
     }
 }
 

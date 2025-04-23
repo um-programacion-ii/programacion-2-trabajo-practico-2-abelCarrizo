@@ -24,7 +24,11 @@ public class Libro extends RecursoDigital {
 
     @Override
     public void mostrarInformacion() {
-        System.out.println("Libro: " + titulo + " por " + autor + " [" + estado + "]");
+        System.out.println("---------- Libro ----------");
+        super.mostrarInformacionBasica();
+        System.out.println("Páginas: " + this.numeroPaginas);
+        System.out.println("---------------------------");
     }
+
 }
 

@@ -24,7 +24,10 @@ public class AudioLibro extends RecursoDigital {
 
     @Override
     public void mostrarInformacion() {
-        System.out.println("AudioLibro: " + titulo + " por " + autor + " [" + estado + "]");
+        System.out.println("---------- Audio Libro ----------");
+        super.mostrarInformacionBasica();
+        System.out.println("Duracion en horas: " + this.duracionHoras);
+        System.out.println("---------------------------------");
     }
 }
 
