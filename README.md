@@ -652,3 +652,73 @@ Implementación de `ServicioNotificaciones` que simula el envío de notificacion
 - Representa un canal más formal o informativo para los usuarios.
 
 ---
+
+## 🧮 Utilidades
+
+**Ubicación:** `app.biblioteca.utils`
+
+---
+
+### ComparadorRecurso
+
+La clase `ComparadorRecurso` proporciona comparadores estáticos que permiten ordenar instancias de `RecursoDigital` según diferentes criterios. Estos comparadores pueden ser utilizados en operaciones de ordenamiento con colecciones como `List<RecursoDigital>` para mejorar la experiencia de búsqueda y visualización en la consola.
+
+#### 📌 Comparadores disponibles:
+
+- `POR_TITULO`:  
+  Ordena los recursos por su título en orden alfabético, ignorando mayúsculas y minúsculas.  
+  **Uso típico:** ordenar alfabéticamente los títulos de libros, revistas o audiolibros.
+
+- `POR_ANIO`:  
+  Ordena los recursos por su año de publicación en orden ascendente.  
+  **Uso típico:** mostrar los recursos desde los más antiguos hasta los más recientes.
+
+- `POR_AUTOR`:  
+  Ordena los recursos alfabéticamente por el nombre del autor, ignorando diferencias entre mayúsculas y minúsculas.  
+  **Uso típico:** agrupar recursos según el autor para facilitar la localización.
+
+
+---
+
+### `EstadoRecurso`
+
+La enumeración `EstadoRecurso` define los posibles estados en los que puede encontrarse un recurso digital dentro del sistema de biblioteca.
+
+#### Valores posibles:
+
+- `DISPONIBLE`:  
+  El recurso está libre y puede ser prestado o reservado.
+
+- `PRESTADO`:  
+  El recurso ha sido prestado a un usuario y no está disponible temporalmente.
+
+- `RESERVADO`:  
+  El recurso ha sido reservado por un usuario y está pendiente de ser prestado.
+
+#### Uso:
+
+Se utiliza para controlar la lógica de préstamos, devoluciones y disponibilidad.
+
+---
+
+### `CategoriaRecurso`
+
+La enumeración `CategoriaRecurso` representa las diferentes categorías de recursos que maneja el sistema.
+
+#### Valores posibles:
+
+- `LIBRO`:  
+  Representa libros.
+
+- `REVISTA`:  
+  Representa revistas.
+
+- `AUDIOLIBRO`:  
+  Representa audiolibros.
+
+- `PODCAST`:  
+  Representa podcasts disponibles en la biblioteca.
+
+#### Uso:
+
+Se utiliza para clasificar los recursos digitales y permite aplicar filtros o búsquedas por tipo desde el menú de consola o en funciones de ordenamiento y visualización.
