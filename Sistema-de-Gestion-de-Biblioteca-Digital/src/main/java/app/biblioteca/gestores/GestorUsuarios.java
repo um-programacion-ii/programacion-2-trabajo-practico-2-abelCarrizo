@@ -1,6 +1,8 @@
 package app.biblioteca.gestores;
 
 import app.biblioteca.entidades.Usuario;
+import app.biblioteca.excepciones.UsuarioNoEncontradoException;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,13 +21,18 @@ public class GestorUsuarios {
     }
 
     public Usuario buscarPorId(String id) {
-        return usuarios.get(id);
+        Usuario usuario =  usuarios.get(id);
+        if (usuario == null) {
+            throw new UsuarioNoEncontradoException("Usuario con ID: " + id + " no encontrado.");
+        }
+        return usuario;
     }
 
     public Usuario buscarPorNombre(String nombre) {
         return usuarios.values().stream()
                 .filter(u -> u.getNombre().equalsIgnoreCase(nombre))
-                .findFirst().orElse(null);
+                .findFirst()
+                .orElseThrow(() -> new UsuarioNoEncontradoException("Usuario con nombre: " + nombre + " no encontrado."));
     }
 
     public void listarUsuarios() {
