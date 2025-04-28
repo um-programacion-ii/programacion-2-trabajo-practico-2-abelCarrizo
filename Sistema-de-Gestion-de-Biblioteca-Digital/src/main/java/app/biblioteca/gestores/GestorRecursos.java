@@ -1,5 +1,6 @@
 package app.biblioteca.gestores;
 
+import app.biblioteca.excepciones.RecursoNoDisponibleException;
 import app.biblioteca.recursos.RecursoDigital;
 import app.biblioteca.utils.CategoriaRecurso;
 import java.util.ArrayList;
@@ -21,7 +22,8 @@ public class GestorRecursos {
     public RecursoDigital buscarPorId(String id) {
         return recursos.stream()
                 .filter(r -> r.getId().equals(id))
-                .findFirst().orElse(null);
+                .findFirst()
+                .orElseThrow(() -> new RecursoNoDisponibleException("Recurso con ID: " + id + " no encontrado."));
     }
 
     /** Busca todos los recursos cuyo título contenga `texto` (case-insensitive). */
