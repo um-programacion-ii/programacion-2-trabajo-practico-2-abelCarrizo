@@ -6,12 +6,13 @@
 - [📌 Objetivo General](#-objetivo-general)
 - [👨‍🎓 Información del Alumno](#-información-del-alumno)
 - [📘 Consigna del Trabajo](#-consigna-del-trabajo)
-- [ 🚀 Consola - Punto de Entrada del Sistema](#-consola---punto-de-entrada-del-sistema)
-- [ 🧱 Entidades](#-entidades)
-- [ 🛠️ Gestores](#-gestores)
-- [ 🧩 Interfaces](#-interfaces)
-- [ 📚  Recursos](#-recursos)
-- [ ⚙️ Servicios](#-servicios)
+- [🚀 Consola - Punto de Entrada del Sistema](#-consola---punto-de-entrada-del-sistema)
+- [🧱 Entidades](#-entidades)
+- [🚨 Excepciones](#-excepciones)
+- [🛠️ Gestores](#-gestores)
+- [🧩 Interfaces](#-interfaces)
+- [📚  Recursos](#-recursos)
+- [⚙️ Servicios](#-servicios)
 
 ## 📌 Objetivo General
 
@@ -447,6 +448,32 @@ Clase que representa a un usuario dentro del sistema.
     - `id`: Identificador único generado automáticamente (UUID).
     - `nombre`: Nombre completo del usuario.
     - `correo`: Dirección de correo electrónico del usuario.
+
+---
+
+## 🚨 Excepciones
+
+### RecursoNoDisponibleException
+
+Excepción personalizada que se lanza cuando un recurso digital no está disponible para realizar una operación, como un préstamo o una renovación.  
+Esta clase extiende `RuntimeException`, permitiendo su uso sin necesidad de declaración explícita (`throws`) en cada método.
+
+**Constructor:**
+
+- `RecursoNoDisponibleException(String message)`  
+  Crea una instancia de la excepción con un mensaje personalizado que describe el motivo por el cual el recurso no está disponible.
+
+---
+
+### UsuarioNoEncontradoException
+
+Excepción personalizada que se lanza cuando un usuario no puede ser encontrado en el sistema de la biblioteca digital.  
+Esta clase también extiende `RuntimeException`.
+
+**Constructor:**
+
+- `UsuarioNoEncontradoException(String message)`  
+  Crea una instancia de la excepción con un mensaje personalizado que describe la situación de no encontrar el usuario solicitado.
 
 ---
 
