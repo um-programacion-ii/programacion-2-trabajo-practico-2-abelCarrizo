@@ -107,6 +107,7 @@ public abstract class RecursoDigital implements IRecursoDigital {
     }
 
     public void mostrarInformacionBasica() {
+        System.out.println("ID: " + this.id);
         System.out.println("Título: " + this.titulo);
         System.out.println("Autor: " + this.autor);
         System.out.println("Estado: " + this.estado);
