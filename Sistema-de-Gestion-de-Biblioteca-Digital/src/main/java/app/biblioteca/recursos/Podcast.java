@@ -1,9 +1,10 @@
 package app.biblioteca.recursos;
 
+import app.biblioteca.interfaces.Prestable;
 import app.biblioteca.utils.CategoriaRecurso;
 import app.biblioteca.utils.EstadoRecurso;
 
-public class Podcast extends RecursoDigital {
+public class Podcast extends RecursoDigital implements Prestable {
     private int cantidadEpisodios;
 
     public Podcast(String titulo, String autor, EstadoRecurso estado, CategoriaRecurso categoria, int anioPublicacion, int cantidadEpisodios) {
@@ -20,6 +21,22 @@ public class Podcast extends RecursoDigital {
             throw new IllegalArgumentException("La cantidad de episodios debe ser mayor que cero.");
         }
         this.cantidadEpisodios = cantidadEpisodios;
+    }
+
+    @Override
+    public void prestar() {
+        if (estado == EstadoRecurso.PRESTADO) {
+            System.out.println("Este podcast ya está prestado.");
+        } else {
+            estado = EstadoRecurso.PRESTADO;
+            System.out.println("Podcast prestado con éxito.");
+        }
+    }
+
+    @Override
+    public void devolver() {
+        estado = EstadoRecurso.DISPONIBLE;
+        System.out.println("Podcast devuelto.");
     }
 
     @Override
