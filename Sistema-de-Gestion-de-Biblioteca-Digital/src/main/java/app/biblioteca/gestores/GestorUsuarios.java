@@ -1,6 +1,6 @@
 package app.biblioteca.gestores;
 
-import app.biblioteca.entidades.Usuario;
+import app.biblioteca.recursos.Usuario;
 import app.biblioteca.excepciones.UsuarioNoEncontradoException;
 
 import java.util.HashMap;

@@ -1,7 +1,6 @@
 package app.biblioteca.recursos;
 
 import app.biblioteca.interfaces.Prestable;
-import app.biblioteca.interfaces.Renovable;
 import app.biblioteca.utils.CategoriaRecurso;
 import app.biblioteca.utils.EstadoRecurso;
 
