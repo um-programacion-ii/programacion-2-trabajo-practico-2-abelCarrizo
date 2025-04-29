@@ -14,6 +14,24 @@ public class Consola {
     private final GestorRecursos gestorRecursos = new GestorRecursos();
     private final GestorUsuarios gestorUsuarios = new GestorUsuarios(notificaciones);
     private final GestorPrestamos gestorPrestamos = new GestorPrestamos(gestorUsuarios, gestorRecursos, notificaciones);
+    private final GestorReservas gestorReservas = new GestorReservas(gestorUsuarios, gestorRecursos, notificaciones, gestorPrestamos);
+
+    private int leerEntero(Scanner scanner, String prompt, int min, int max) {
+        while (true) {
+            System.out.print(prompt);
+            String linea = scanner.nextLine().trim();
+            try {
+                int valor = Integer.parseInt(linea);
+                if (min <= max && (valor < min || valor > max)) {
+                    System.out.printf("Debe ingresar un número entre %d y %d.%n", min, max);
+                } else {
+                    return valor;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Entrada inválida. Por favor, ingrese un número entero.");
+            }
+        }
+    }
 
     public static void main(String[] args) {
         new Consola().iniciar();
@@ -27,19 +45,20 @@ public class Consola {
             System.out.println("1. Gestionar Usuarios");
             System.out.println("2. Gestionar Recursos");
             System.out.println("3. Gestionar Prestamos");
-            System.out.println("4. Salir");
+            System.out.println("4. Gestionar Reservas");
+            System.out.println("5. Salir");
             System.out.print("Seleccione una opción: ");
-            int opcion = scanner.nextInt(); scanner.nextLine();
+            int op = leerEntero(scanner, "Seleccione una opción: ", 1, 5);
 
-            switch (opcion) {
+            switch (op) {
                 case 1 -> menuUsuarios(scanner);
                 case 2 -> menuRecursos(scanner);
                 case 3 -> menuPrestamos(scanner);
-                case 4 -> {
+                case 4 -> menuReservas(scanner);
+                case 5 -> {
                     System.out.println("¡Hasta luego!");
                     return;
                 }
-                default -> System.out.println("Opción no válida.");
             }
         }
     }
@@ -51,7 +70,7 @@ public class Consola {
         System.out.println("3. Listar Usuarios");
         System.out.println("4. Volver");
         System.out.print("Opción: ");
-        int op = Integer.parseInt(scanner.nextLine());
+        int op = leerEntero(scanner, "Seleccione una opción: ", 1, 4);
 
         try {
             switch (op) {
@@ -73,7 +92,6 @@ public class Consola {
                 }
                 case 3 -> gestorUsuarios.listarUsuarios();
                 case 4 -> { /* vuelve */ }
-                default -> System.out.println("Opción inválida.");
             }
         } catch (UsuarioNoEncontradoException e) {
             System.out.println("Error:  " + e.getMessage());
@@ -90,7 +108,7 @@ public class Consola {
         System.out.println("6. Listar Todos");
         System.out.println("7. Volver");
         System.out.print("Opción: ");
-        int op = Integer.parseInt(scanner.nextLine());
+        int op = leerEntero(scanner, "Seleccione una opción: ", 1, 7);
 
         try {
             switch (op) {
@@ -133,7 +151,6 @@ public class Consola {
                 }
                 case 6 -> gestorRecursos.listarRecursos();
                 case 7 -> {/* vuelve */}
-                default -> System.out.println("Opción no válida.");
             }
         } catch (RecursoNoDisponibleException e) {
             System.out.println("Error:  " + e.getMessage());
@@ -144,7 +161,7 @@ public class Consola {
         System.out.println("\n--- Crear Recurso ---");
         System.out.println("1. Libro  2. Revista  3. Audiolibro  4.Podcast");
         System.out.print("Tipo: ");
-        int tipo = Integer.parseInt(scanner.nextLine());
+        int tipo = leerEntero(scanner, "Seleccione una opción: ", 1, 4);
 
         System.out.print("Título: ");
         String titulo = scanner.nextLine();
@@ -183,7 +200,6 @@ public class Consola {
                             new Podcast(titulo, autor, EstadoRecurso.DISPONIBLE, CategoriaRecurso.PODCAST, anio, ep)
                     );
                 }
-                default -> System.out.println("Tipo inválido.");
             }
         } catch (Exception e) {
             System.out.println("Error al crear el recurso: " + e.getMessage());
@@ -215,8 +231,7 @@ public class Consola {
             System.out.println("4. Listar Activos");
             System.out.println("5. Listar Devoluciones");
             System.out.println("6. Volver");
-            System.out.print("Opción: ");
-            int op = Integer.parseInt(scanner.nextLine());
+            int op = leerEntero(scanner, "Seleccione una opción: ", 1, 6);
 
             try {
                 switch (op) {
@@ -248,10 +263,64 @@ public class Consola {
                                 .forEach(System.out::println);
                     }
                     case 6 -> { return; }
-                    default -> System.out.println("Opción inválida.");
                 }
             } catch (UsuarioNoEncontradoException | RecursoNoDisponibleException e) {
                 System.out.println("Error:  " + e.getMessage());
+            }
+        }
+    }
+
+    private void menuReservas(Scanner scanner) {
+        while (true) {
+            System.out.println("\n--- Gestionar Reservas ---");
+            System.out.println("1. Crear Reserva");
+            System.out.println("2. Procesar Siguiente Reserva");
+            System.out.println("3. Listar Reservas Pendientes");
+            System.out.println("4. Listar Historial de Reservas");
+            System.out.println("5. Cancelar Reserva");
+            System.out.println("6. Volver");
+            System.out.print("Opción: ");
+            int op = leerEntero(scanner, "Seleccione una opción: ", 1, 6);
+
+            try {
+                switch (op) {
+                    case 1 -> {
+                        System.out.print("ID Usuario: ");
+                        String uid = scanner.nextLine();
+                        System.out.print("ID Recurso: ");
+                        String rid = scanner.nextLine();
+                        gestorReservas.reservar(uid, rid);
+                    }
+                    case 2 -> {
+                        System.out.print("ID Recurso a procesar: ");
+                        String rid2 = scanner.nextLine();
+                        var res = gestorReservas.procesarSiguiente(rid2);
+                        if (res != null) {
+                            gestorReservas.procesarSiguiente(rid2);
+                        } else {
+                            System.out.println("No hay reservas para ese recurso.");
+                        }
+                    }
+                    case 3 -> {
+                        System.out.println("== Reservas Pendientes ==");
+                        gestorReservas.listarPendientes().forEach(System.out::println);
+                    }
+                    case 4 -> {
+                        System.out.println("== Historial de Reservas ==");
+                        gestorReservas.listarHistorial().forEach(System.out::println);
+                    }
+                    case 5 -> {
+                        System.out.print("ID Reserva a cancelar: ");
+                        String rid = scanner.nextLine();
+                        boolean ok = gestorReservas.cancelarReserva(rid);
+                        if (!ok) {
+                            System.out.println("No se encontró una reserva pendiente con ese ID.");
+                        }
+                    }
+                    case 6 -> { return; }
+                }
+            } catch (UsuarioNoEncontradoException | RecursoNoDisponibleException e) {
+                System.out.println("Error  " + e.getMessage());
             }
         }
     }
