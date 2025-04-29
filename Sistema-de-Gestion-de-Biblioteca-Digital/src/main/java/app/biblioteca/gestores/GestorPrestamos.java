@@ -41,7 +41,7 @@ public class GestorPrestamos {
                     + r.getTitulo() + "\" no está disponible.");
         }
 
-        // Invocamos el método específico de la implementación
+        // Invocamos el metodo específico de la implementación
         prestable.prestar();
         r.setEstado(EstadoRecurso.PRESTADO);
 
@@ -88,9 +88,19 @@ public class GestorPrestamos {
         }
 
         // Extiende la fecha de vencimiento
-        p.renovar();
-        gestorNotificaciones.notificar("Renovación: "
-                + r.getTitulo() + " (nuevo vence: " + p.getFechaVencimiento() + ")");
+        try {
+            p.renovar();  // puede lanzar IllegalStateException
+            gestorNotificaciones.notificar("Renovación: " + p.getRecurso().getTitulo()
+                    + " (nuevo vence: " + p.getFechaVencimiento() + ")");
+        } catch (IllegalStateException e) {
+            throw new RecursoNoDisponibleException(e.getMessage());
+        }
+    }
+
+    public boolean tienePrestamoActivo(String usuarioId, String recursoId) {
+        return prestamosActivos.stream()
+                .anyMatch(p -> p.getUsuario().getId().equals(usuarioId)
+                        && p.getRecurso().getId().equals(recursoId));
     }
 
     public List<Prestamo> listarPrestamosActivos() {
