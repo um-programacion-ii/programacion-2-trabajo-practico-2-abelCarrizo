@@ -1,10 +1,12 @@
 package app.biblioteca.alertas;
 
 import app.biblioteca.gestores.GestorPrestamos;
+import app.biblioteca.gestores.GestorRecordatorios;
 import app.biblioteca.gestores.GestorReservas;
 import app.biblioteca.recursos.Reserva;
 import app.biblioteca.utils.EstadoRecurso;
 import app.biblioteca.utils.EstadoReserva;
+import app.biblioteca.utils.NivelUrgencia;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -13,16 +15,18 @@ import java.util.Scanner;
 public class AlertaDisponibilidad {
     private final GestorReservas gestorReservas;
     private final GestorPrestamos gestorPrestamos;
+    private final GestorRecordatorios gestorRecordatorios;
     private final DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    public AlertaDisponibilidad(GestorReservas gestorReservas, GestorPrestamos gestorPrestamos) {
+    public AlertaDisponibilidad(GestorReservas gestorReservas, GestorPrestamos gestorPrestamos, GestorRecordatorios gestorRecordatorios) {
         this.gestorReservas  = gestorReservas;
         this.gestorPrestamos = gestorPrestamos;
+        this.gestorRecordatorios  = gestorRecordatorios;
     }
 
     /**
      * Revisa todas las reservas pendientes y, para cada
-     * recurso que esté DISPONIBLE, muestra la alerta,
+     * recurso que esté DISPONIBLE, genera un recordatorio INFO,
      * permite al usuario tomarlo inmediato y cancela la reserva.
      */
     public void notificarDisponibilidad(Scanner scanner) {
@@ -35,14 +39,16 @@ public class AlertaDisponibilidad {
                     && r.getRecurso().getEstado() == EstadoRecurso.DISPONIBLE) {
 
                 alguna = true;
-                System.out.println("\n  ALERTA DE DISPONIBILIDAD  ");
-                System.out.printf("Reserva ID: %s%n", r.getId());
-                System.out.printf("Usuario: %s (%s)%n",
+
+                String mensaje = String.format(
+                        "Recurso \"%s\" reservado por %s está DISPONIBLE desde %s.",
+                        r.getRecurso().getTitulo(),
                         r.getUsuario().getNombre(),
-                        r.getUsuario().getCorreo());
-                System.out.printf("Recurso: %s%n", r.getRecurso().getTitulo());
-                System.out.printf("Fecha de reserva: %s%n",
-                        r.getFechaReserva().format(fmt));
+                        r.getFechaReserva().format(fmt)
+                );
+
+                gestorRecordatorios.generar(mensaje, NivelUrgencia.INFO);
+
                 System.out.println("El recurso ya está disponible.");
                 System.out.print("¿Desea realizar el préstamo ahora? (s/n): ");
 

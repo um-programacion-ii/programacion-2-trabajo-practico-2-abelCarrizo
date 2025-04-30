@@ -1,9 +1,11 @@
 package app.biblioteca.alertas;
 
 import app.biblioteca.gestores.GestorPrestamos;
+import app.biblioteca.gestores.GestorRecordatorios;
 import app.biblioteca.interfaces.Renovable;
 import app.biblioteca.recursos.Prestamo;
 import app.biblioteca.utils.EstadoPrestamo;
+import app.biblioteca.utils.NivelUrgencia;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -13,10 +15,12 @@ import java.util.Scanner;
 
 public class AlertaVencimiento {
     private final GestorPrestamos gestorPrestamos;
+    private final GestorRecordatorios gestorRecordatorios;
     private final DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    public AlertaVencimiento(GestorPrestamos gestorPrestamos) {
+    public AlertaVencimiento(GestorPrestamos gestorPrestamos, GestorRecordatorios gestorRecordatorios) {
         this.gestorPrestamos = gestorPrestamos;
+        this.gestorRecordatorios = gestorRecordatorios;
     }
 
     /**
@@ -32,22 +36,24 @@ public class AlertaVencimiento {
 
             long diasRestantes = ChronoUnit.DAYS.between(hoy, p.getFechaVencimiento());
             String recurso = p.getRecurso().getTitulo();
+            String vencimientoStr = p.getFechaVencimiento().format(fmt);
 
             if (diasRestantes > 1) {
-                // Mensaje informativo para días > 1
-                System.out.printf("Recurso '%s' vence en %d días (%s).%n",
-                        recurso, diasRestantes, p.getFechaVencimiento().format(fmt));
-
+                String msg = String.format(
+                        "INFO: '%s' vence en %d días (%s).",
+                        recurso, diasRestantes, vencimientoStr
+                );
+                gestorRecordatorios.generar(msg, NivelUrgencia.INFO);
             } else {
                 // Alerta para 1 día o menos
                 System.out.println("\n  ALERTA DE VENCIMIENTO ");
-                System.out.printf("Préstamo ID: %s%n", p.getId());
-                System.out.printf("Usuario: %s%n", p.getUsuario().getNombre());
-                System.out.printf("Recurso: %s%n", recurso);
-                System.out.printf("Vence el: %s (%s)%n",
-                        p.getFechaVencimiento().format(fmt),
-                        diasRestantes < 0 ? "¡ya vencido!" :
-                                diasRestantes == 0 ? "hoy" : "mañana");
+                String estadoTexto = diasRestantes < 0 ? "¡ya vencido!" :
+                        diasRestantes == 0 ? "hoy" : "mañana";
+                String msg = String.format(
+                        "ADVERTENCIA: Préstamo %s de '%s' vence %s (%s).",
+                        p.getId(), recurso, estadoTexto, vencimientoStr
+                );
+                gestorRecordatorios.generar(msg, NivelUrgencia.WARNING);
 
                 // Opción a renovar si es renovable
                 if (p.getRecurso() instanceof Renovable) {
