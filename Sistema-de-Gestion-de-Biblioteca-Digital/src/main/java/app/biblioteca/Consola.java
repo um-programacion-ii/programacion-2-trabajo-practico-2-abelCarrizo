@@ -7,6 +7,7 @@ import app.biblioteca.recursos.*;
 import app.biblioteca.utils.*;
 import app.biblioteca.servicios.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 
@@ -52,8 +53,10 @@ public class Consola {
             System.out.println("5. Ver Historial de Notificaciones");
             System.out.println("6. Ver Reportes");
             System.out.println("7. Ver Alertas de Vencimientos");
-            System.out.println("8. Probar concurrencia");
-            System.out.println("9. Salir");
+            // Verificar el funcionamiento de la alerta cuando queda un dia para devolver el recurso
+            System.out.println("8. Simular Alerta de Vencimiento");
+            System.out.println("9. Probar concurrencia");
+            System.out.println("10. Salir");
             int op = leerEntero(scanner, "Seleccione una opción: ", 1, 9);
 
             switch (op) {
@@ -68,8 +71,9 @@ public class Consola {
                 }
                 case 6 -> menuReportes(scanner);
                 case 7 -> alerta.verificarAlertas(scanner);
-                case 8 -> menuConcurrencia(scanner);
-                case 9 -> {
+                case 8 -> simularAlertaVencimiento(scanner);
+                case 9 -> menuConcurrencia(scanner);
+                case 10 -> {
                     notificaciones.shutdown();  // cerramos el pool antes de terminar
                     System.out.println("¡Hasta luego!");
                     return;
@@ -377,6 +381,40 @@ public class Consola {
             }
         }
     }
+
+    private void simularAlertaVencimiento(Scanner scanner) {
+        System.out.println("\n== Simulación de Alerta de Vencimiento ==");
+
+        // Crear usuario
+        Usuario usuario = new Usuario("Usuario Test", "test@email.com", "123456789");
+        gestorUsuarios.agregarUsuario(usuario);
+        System.out.println("Usuario creado con ID: " + usuario.getId());
+
+        // Crear recurso
+        RecursoDigital recurso = new Libro("Libro Test", "Autor Test", EstadoRecurso.DISPONIBLE, CategoriaRecurso.LIBRO, 2024, 100);
+        gestorRecursos.agregarRecurso(recurso);
+        System.out.println("Recurso creado con ID: " + recurso.getId());
+
+        // Prestar recurso
+        gestorPrestamos.prestar(usuario.getId(), recurso.getId());
+
+        // Forzar vencimiento en 1 día (esto requiere modificar directamente la fecha del préstamo)
+        var prestamo = gestorPrestamos.listarPrestamosActivos().stream()
+                .filter(p -> p.getUsuario().getId().equals(usuario.getId()) && p.getRecurso().getId().equals(recurso.getId()))
+                .findFirst().orElse(null);
+
+        if (prestamo != null) {
+            // Suponiendo que tu clase Prestamo tenga un setter para la fecha de vencimiento
+            prestamo.setFechaVencimiento(LocalDate.now().plusDays(1));
+            System.out.println("Fecha de vencimiento forzada a: " + prestamo.getFechaVencimiento());
+
+            // Ejecutar verificación de alertas
+            alerta.verificarAlertas(scanner);
+        } else {
+            System.out.println("No se pudo encontrar el préstamo.");
+        }
+    }
+
 
     private void menuConcurrencia(Scanner scanner) {
         System.out.println("\n--- Test Concurrencia de Préstamos ---");
