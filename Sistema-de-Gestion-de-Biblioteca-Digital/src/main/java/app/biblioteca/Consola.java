@@ -15,6 +15,7 @@ public class Consola {
     private final GestorUsuarios gestorUsuarios = new GestorUsuarios(notificaciones);
     private final GestorPrestamos gestorPrestamos = new GestorPrestamos(gestorUsuarios, gestorRecursos, notificaciones);
     private final GestorReservas gestorReservas = new GestorReservas(gestorUsuarios, gestorRecursos, notificaciones, gestorPrestamos);
+    private final GestorReportes gestorReportes = new GestorReportes(gestorPrestamos, gestorUsuarios);
 
     private int leerEntero(Scanner scanner, String prompt, int min, int max) {
         while (true) {
@@ -47,9 +48,10 @@ public class Consola {
             System.out.println("3. Gestionar Prestamos");
             System.out.println("4. Gestionar Reservas");
             System.out.println("5. Ver Historial de Notificaciones");
-            System.out.println("6. Probar concurrencia");
-            System.out.println("7. Salir");
-            int op = leerEntero(scanner, "Seleccione una opción: ", 1, 7);
+            System.out.println("6. Ver Reportes");
+            System.out.println("7. Probar concurrencia");
+            System.out.println("8. Salir");
+            int op = leerEntero(scanner, "Seleccione una opción: ", 1, 8);
 
             switch (op) {
                 case 1 -> menuUsuarios(scanner);
@@ -61,8 +63,9 @@ public class Consola {
                     notificaciones.getHistorial()
                             .forEach(System.out::println);
                 }
-                case 6 -> menuConcurrencia(scanner);
-                case 7 -> {
+                case 6 -> menuReportes(scanner);
+                case 7 -> menuConcurrencia(scanner);
+                case 8 -> {
                     notificaciones.shutdown();  // cerramos el pool antes de terminar
                     System.out.println("¡Hasta luego!");
                     return;
@@ -329,6 +332,48 @@ public class Consola {
         }
     }
 
+    private void menuReportes(Scanner scanner) {
+        while (true) {
+            System.out.println("\n--- Reportes ---");
+            System.out.println("1. Top Recursos Prestados");
+            System.out.println("2. Top Usuarios Activos");
+            System.out.println("3. Estadísticas por Categoría");
+            System.out.println("4. Volver");
+            int op = leerEntero(scanner, "Seleccione una opción: ", 1, 4);
+
+            switch (op) {
+                case 1 -> {
+                    int n = leerEntero(scanner, "¿Cuántos top recursos mostrar? ", 1, Integer.MAX_VALUE);
+                    var topRec = gestorReportes.recursosMasPrestados(n);
+                    System.out.println("== Recursos más prestados ==");
+                    for (var e : topRec) {
+                        System.out.printf("%s → %d veces%n",
+                                e.getKey().getTitulo(), e.getValue());
+                    }
+                }
+                case 2 -> {
+                    int n = leerEntero(scanner, "¿Cuántos top usuarios mostrar? ", 1, Integer.MAX_VALUE);
+                    var topUsu = gestorReportes.usuariosMasActivos(n);
+                    System.out.println("== Usuarios más activos ==");
+                    for (var e : topUsu) {
+                        System.out.printf("%s → %d préstamos%n",
+                                e.getKey().getNombre(), e.getValue());
+                    }
+                }
+                case 3 -> {
+                    var stats = gestorReportes.usoPorCategoria();
+                    System.out.println("== Uso por Categoría ==");
+                    stats.forEach((cat, cnt) ->
+                            System.out.printf("%s: %d préstamos%n", cat, cnt)
+                    );
+                }
+                case 4 -> {
+                    return;
+                }
+            }
+        }
+    }
+
     private void menuConcurrencia(Scanner scanner) {
         System.out.println("\n--- Test Concurrencia de Préstamos ---");
         System.out.print("ID Usuario 1: ");
@@ -359,5 +404,4 @@ public class Consola {
             t2.join();
         } catch (InterruptedException ignored) {}
     }
-
 }
