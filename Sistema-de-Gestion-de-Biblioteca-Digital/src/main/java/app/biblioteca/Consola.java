@@ -19,8 +19,9 @@ public class Consola {
     private final GestorPrestamos gestorPrestamos = new GestorPrestamos(gestorUsuarios, gestorRecursos, notificaciones);
     private final GestorReservas gestorReservas = new GestorReservas(gestorUsuarios, gestorRecursos, notificaciones, gestorPrestamos);
     private final GestorReportes gestorReportes = new GestorReportes(gestorPrestamos, gestorUsuarios);
-    private final AlertaVencimiento alertaVencimiento = new AlertaVencimiento(gestorPrestamos);
-    private final AlertaDisponibilidad alertaDisponibilidad = new AlertaDisponibilidad(gestorReservas, gestorPrestamos);
+    private final GestorRecordatorios gestorRecordatorios = new GestorRecordatorios();
+    private final AlertaVencimiento alertaVencimiento = new AlertaVencimiento(gestorPrestamos, gestorRecordatorios);
+    private final AlertaDisponibilidad alertaDisponibilidad = new AlertaDisponibilidad(gestorReservas, gestorPrestamos, gestorRecordatorios);
 
     private int leerEntero(Scanner scanner, String prompt, int min, int max) {
         while (true) {
@@ -52,29 +53,23 @@ public class Consola {
             System.out.println("2. Gestionar Recursos");
             System.out.println("3. Gestionar Prestamos");
             System.out.println("4. Gestionar Reservas");
-            System.out.println("5. Ver Historial de Notificaciones");
+            System.out.println("5. Preferencias de Notificaciones");
             System.out.println("6. Ver Reportes");
-            System.out.println("7. Ver Alertas de Vencimientos");
-            System.out.println("8. Simular Alerta de Vencimiento"); // Verificar el funcionamiento de la alerta cuando queda un dia para devolver el recurso
-            System.out.println("9. Probar concurrencia");
-            System.out.println("10. Salir");
-            int op = leerEntero(scanner, "Seleccione una opción: ", 1, 11);
+            System.out.println("7. Alertas");
+            System.out.println("8. Probar concurrencia");
+            System.out.println("9. Salir");
+            int op = leerEntero(scanner, "Seleccione una opción: ", 1, 9);
 
             switch (op) {
                 case 1 -> menuUsuarios(scanner);
                 case 2 -> menuRecursos(scanner);
                 case 3 -> menuPrestamos(scanner);
                 case 4 -> menuReservas(scanner);
-                case 5 -> {
-                    System.out.println("\n== Historial de Notificaciones ==");
-                    notificaciones.getHistorial()
-                            .forEach(System.out::println);
-                }
+                case 5 -> preferenciaNotificaciones(scanner);
                 case 6 -> menuReportes(scanner);
-                case 7 -> alertaVencimiento.verificarAlertas(scanner);
-                case 8 -> simularAlertaVencimiento(scanner);
-                case 9 -> menuConcurrencia(scanner);
-                case 10 -> {
+                case 7 -> menuAlertas(scanner);
+                case 8 -> menuConcurrencia(scanner);
+                case 9 -> {
                     notificaciones.shutdown();  // cerramos el pool antes de terminar
                     System.out.println("¡Hasta luego!");
                     return;
@@ -381,6 +376,47 @@ public class Consola {
                     return;
                 }
             }
+        }
+    }
+
+    private void preferenciaNotificaciones(Scanner sc) {
+        while (true) {
+            System.out.println("\n--- Recordatorios ---");
+            System.out.println("1. Ver Historial");
+            System.out.println("2. Configurar Nivel");
+            System.out.println("3. Volver");
+            int op = leerEntero(sc, "Opción: ", 1, 3);
+            switch (op) {
+                case 1 -> gestorRecordatorios.mostrarHistorial();
+                case 2 -> {
+                    System.out.println("Seleccione nivel:");
+                    NivelUrgencia[] vals = NivelUrgencia.values();
+                    for (int i = 0; i < vals.length; i++) {
+                        System.out.printf("%d. %s%n", i+1, vals[i].getEtiqueta());
+                    }
+                    int idx = leerEntero(sc, "Nivel: ", 1, vals.length);
+                    NivelUrgencia nivel = vals[idx-1];
+                    System.out.print("Habilitar? (s/n): ");
+                    boolean hab = sc.nextLine().trim().equalsIgnoreCase("s");
+                    gestorRecordatorios.configurar(nivel, hab);
+                }
+                case 3 -> { return; }
+            }
+        }
+    }
+
+    private void menuAlertas(Scanner scanner) {
+        System.out.println("\n--- Alertas ---");
+        System.out.println(" 1. Alertas de Vencimiento");
+        System.out.println(" 2. Alertas de Disponibilidad");
+        System.out.println(" 3. Simular alerta de vencimiento");
+        System.out.println(" 4. Volver");
+        int op = leerEntero(scanner, "Seleccione una opción: ", 1, 4);
+        switch (op) {
+            case 1 -> alertaVencimiento.verificarAlertas(scanner);
+            case 2 -> alertaDisponibilidad.notificarDisponibilidad(scanner);
+            case 3 -> simularAlertaVencimiento(scanner); // Verificar el funcionamiento de la alerta cuando queda un dia para devolver el recurso
+            case 4 -> { /* vuelve */ }
         }
     }
 
