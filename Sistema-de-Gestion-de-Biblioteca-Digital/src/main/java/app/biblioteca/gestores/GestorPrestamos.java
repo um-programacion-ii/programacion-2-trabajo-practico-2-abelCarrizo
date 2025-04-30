@@ -27,7 +27,7 @@ public class GestorPrestamos {
         this.gestorNotificaciones = gn;
     }
 
-    public void prestar(String usuarioId, String recursoId)
+    public synchronized void prestar(String usuarioId, String recursoId)
             throws UsuarioNoEncontradoException, RecursoNoDisponibleException {
         Usuario u = gestorUsuarios.buscarPorId(usuarioId);
         RecursoDigital r = gestorRecursos.buscarPorId(recursoId);
@@ -51,7 +51,7 @@ public class GestorPrestamos {
                 + u.getNombre() + " → " + r.getTitulo());
     }
 
-    public void devolver(String prestamoId) throws RecursoNoDisponibleException {
+    public synchronized void devolver(String prestamoId) throws RecursoNoDisponibleException {
         Prestamo p = prestamosActivos.stream()
                 .filter(x -> x.getId().equals(prestamoId))
                 .findFirst()
@@ -69,7 +69,7 @@ public class GestorPrestamos {
                 + r.getTitulo() + " (Préstamo " + prestamoId + ")");
     }
 
-    public void renovarPrestamo(String prestamoId) throws RecursoNoDisponibleException {
+    public synchronized void renovarPrestamo(String prestamoId) throws RecursoNoDisponibleException {
         Prestamo p = prestamosActivos.stream()
                 .filter(x -> x.getId().equals(prestamoId))
                 .findFirst()

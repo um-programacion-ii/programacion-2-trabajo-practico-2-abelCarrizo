@@ -47,8 +47,9 @@ public class Consola {
             System.out.println("3. Gestionar Prestamos");
             System.out.println("4. Gestionar Reservas");
             System.out.println("5. Ver Historial de Notificaciones");
-            System.out.println("6. Salir");
-            int op = leerEntero(scanner, "Seleccione una opción: ", 1, 6);
+            System.out.println("6. Probar concurrencia");
+            System.out.println("7. Salir");
+            int op = leerEntero(scanner, "Seleccione una opción: ", 1, 7);
 
             switch (op) {
                 case 1 -> menuUsuarios(scanner);
@@ -60,7 +61,8 @@ public class Consola {
                     notificaciones.getHistorial()
                             .forEach(System.out::println);
                 }
-                case 6 -> {
+                case 6 -> menuConcurrencia(scanner);
+                case 7 -> {
                     notificaciones.shutdown();  // cerramos el pool antes de terminar
                     System.out.println("¡Hasta luego!");
                     return;
@@ -326,4 +328,36 @@ public class Consola {
             }
         }
     }
+
+    private void menuConcurrencia(Scanner scanner) {
+        System.out.println("\n--- Test Concurrencia de Préstamos ---");
+        System.out.print("ID Usuario 1: ");
+        String u1 = scanner.nextLine();
+        System.out.print("ID Usuario 2: ");
+        String u2 = scanner.nextLine();
+        System.out.print("ID Recurso: ");
+        String rid = scanner.nextLine();
+
+        // Creamos dos hilos que intentan prestar al mismo recurso
+        // En este hilo se podrá prestar el libro
+        Thread t1 = new Thread(() -> {
+            try { gestorPrestamos.prestar(u1, rid); }
+            catch (Exception e) { System.out.println(e.getMessage()); }
+        }, "T1");
+
+        // En este hilo no se podrá porque no estará disponible ya que fue prestado.
+        Thread t2 = new Thread(() -> {
+            try { gestorPrestamos.prestar(u2, rid); }
+            catch (Exception e) { System.out.println(e.getMessage()); }
+        }, "T2");
+
+        t1.start();
+        t2.start();
+
+        try {
+            t1.join();
+            t2.join();
+        } catch (InterruptedException ignored) {}
+    }
+
 }
