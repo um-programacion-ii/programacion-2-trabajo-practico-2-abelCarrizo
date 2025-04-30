@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Consola {
-    private final GestorNotificaciones notificaciones = new GestorNotificaciones(new ServicioNotificacionesEmail());
+    private final GestorNotificaciones notificaciones = new GestorNotificaciones(List.of(new ServicioNotificacionesEmail(),  new ServicioNotificacionesSMS()));
     private final GestorRecursos gestorRecursos = new GestorRecursos();
     private final GestorUsuarios gestorUsuarios = new GestorUsuarios(notificaciones);
     private final GestorPrestamos gestorPrestamos = new GestorPrestamos(gestorUsuarios, gestorRecursos, notificaciones);
@@ -18,7 +18,7 @@ public class Consola {
 
     private int leerEntero(Scanner scanner, String prompt, int min, int max) {
         while (true) {
-            System.out.print(prompt);
+            System.out.println(prompt);
             String linea = scanner.nextLine().trim();
             try {
                 int valor = Integer.parseInt(linea);
@@ -46,9 +46,9 @@ public class Consola {
             System.out.println("2. Gestionar Recursos");
             System.out.println("3. Gestionar Prestamos");
             System.out.println("4. Gestionar Reservas");
-            System.out.println("5. Salir");
-            System.out.print("Seleccione una opción: ");
-            int op = leerEntero(scanner, "Seleccione una opción: ", 1, 5);
+            System.out.println("5. Ver Historial de Notificaciones");
+            System.out.println("6. Salir");
+            int op = leerEntero(scanner, "Seleccione una opción: ", 1, 6);
 
             switch (op) {
                 case 1 -> menuUsuarios(scanner);
@@ -56,6 +56,12 @@ public class Consola {
                 case 3 -> menuPrestamos(scanner);
                 case 4 -> menuReservas(scanner);
                 case 5 -> {
+                    System.out.println("\n== Historial de Notificaciones ==");
+                    notificaciones.getHistorial()
+                            .forEach(System.out::println);
+                }
+                case 6 -> {
+                    notificaciones.shutdown();  // cerramos el pool antes de terminar
                     System.out.println("¡Hasta luego!");
                     return;
                 }
@@ -69,7 +75,6 @@ public class Consola {
         System.out.println("2. Buscar Usuario por ID");
         System.out.println("3. Listar Usuarios");
         System.out.println("4. Volver");
-        System.out.print("Opción: ");
         int op = leerEntero(scanner, "Seleccione una opción: ", 1, 4);
 
         try {
@@ -107,7 +112,6 @@ public class Consola {
         System.out.println("5. Ordenar Recursos");
         System.out.println("6. Listar Todos");
         System.out.println("7. Volver");
-        System.out.print("Opción: ");
         int op = leerEntero(scanner, "Seleccione una opción: ", 1, 7);
 
         try {
@@ -160,7 +164,6 @@ public class Consola {
     private void crearRecurso (Scanner scanner) {
         System.out.println("\n--- Crear Recurso ---");
         System.out.println("1. Libro  2. Revista  3. Audiolibro  4.Podcast");
-        System.out.print("Tipo: ");
         int tipo = leerEntero(scanner, "Seleccione una opción: ", 1, 4);
 
         System.out.print("Título: ");
@@ -279,7 +282,6 @@ public class Consola {
             System.out.println("4. Listar Historial de Reservas");
             System.out.println("5. Cancelar Reserva");
             System.out.println("6. Volver");
-            System.out.print("Opción: ");
             int op = leerEntero(scanner, "Seleccione una opción: ", 1, 6);
 
             try {
