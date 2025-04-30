@@ -1,5 +1,6 @@
 package app.biblioteca;
 
+import app.biblioteca.alertas.AlertaDisponibilidad;
 import app.biblioteca.alertas.AlertaVencimiento;
 import app.biblioteca.excepciones.*;
 import app.biblioteca.gestores.*;
@@ -18,7 +19,8 @@ public class Consola {
     private final GestorPrestamos gestorPrestamos = new GestorPrestamos(gestorUsuarios, gestorRecursos, notificaciones);
     private final GestorReservas gestorReservas = new GestorReservas(gestorUsuarios, gestorRecursos, notificaciones, gestorPrestamos);
     private final GestorReportes gestorReportes = new GestorReportes(gestorPrestamos, gestorUsuarios);
-    private final AlertaVencimiento alerta = new AlertaVencimiento(gestorPrestamos);
+    private final AlertaVencimiento alertaVencimiento = new AlertaVencimiento(gestorPrestamos);
+    private final AlertaDisponibilidad alertaDisponibilidad = new AlertaDisponibilidad(gestorReservas, gestorPrestamos);
 
     private int leerEntero(Scanner scanner, String prompt, int min, int max) {
         while (true) {
@@ -53,11 +55,10 @@ public class Consola {
             System.out.println("5. Ver Historial de Notificaciones");
             System.out.println("6. Ver Reportes");
             System.out.println("7. Ver Alertas de Vencimientos");
-            // Verificar el funcionamiento de la alerta cuando queda un dia para devolver el recurso
-            System.out.println("8. Simular Alerta de Vencimiento");
+            System.out.println("8. Simular Alerta de Vencimiento"); // Verificar el funcionamiento de la alerta cuando queda un dia para devolver el recurso
             System.out.println("9. Probar concurrencia");
             System.out.println("10. Salir");
-            int op = leerEntero(scanner, "Seleccione una opción: ", 1, 9);
+            int op = leerEntero(scanner, "Seleccione una opción: ", 1, 11);
 
             switch (op) {
                 case 1 -> menuUsuarios(scanner);
@@ -70,7 +71,7 @@ public class Consola {
                             .forEach(System.out::println);
                 }
                 case 6 -> menuReportes(scanner);
-                case 7 -> alerta.verificarAlertas(scanner);
+                case 7 -> alertaVencimiento.verificarAlertas(scanner);
                 case 8 -> simularAlertaVencimiento(scanner);
                 case 9 -> menuConcurrencia(scanner);
                 case 10 -> {
@@ -244,7 +245,7 @@ public class Consola {
             System.out.println("1. Realizar Préstamo");
             System.out.println("2. Devolver Préstamo");
             System.out.println("3. Renovar Préstamo");
-            System.out.println("4. Listar Activos");
+            System.out.println("4. Listar Prestamos Activos");
             System.out.println("5. Listar Devoluciones");
             System.out.println("6. Volver");
             int op = leerEntero(scanner, "Seleccione una opción: ", 1, 6);
@@ -262,6 +263,7 @@ public class Consola {
                         System.out.print("ID Préstamo a devolver: ");
                         String pid = scanner.nextLine();
                         gestorPrestamos.devolver(pid);
+                        alertaDisponibilidad.notificarDisponibilidad(scanner);
                     }
                     case 3 -> {
                         System.out.print("ID Préstamo a renovar: ");
@@ -409,7 +411,7 @@ public class Consola {
             System.out.println("Fecha de vencimiento forzada a: " + prestamo.getFechaVencimiento());
 
             // Ejecutar verificación de alertas
-            alerta.verificarAlertas(scanner);
+            alertaVencimiento.verificarAlertas(scanner);
         } else {
             System.out.println("No se pudo encontrar el préstamo.");
         }
