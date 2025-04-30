@@ -45,6 +45,10 @@ public class Prestamo {
         return fechaVencimiento;
     }
 
+    public void setFechaVencimiento(LocalDate fechaVencimiento) {
+        this.fechaVencimiento = fechaVencimiento;
+    }
+
     public LocalDate getFechaDevolucion() {
         return fechaDevolucion;
     }
