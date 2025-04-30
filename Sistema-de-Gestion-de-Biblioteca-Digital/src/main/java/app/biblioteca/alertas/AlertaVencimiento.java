@@ -40,7 +40,7 @@ public class AlertaVencimiento {
 
             } else {
                 // Alerta para 1 día o menos
-                System.out.println("\n⚠️  ALERTA DE VENCIMIENTO ⚠️");
+                System.out.println("\n  ALERTA DE VENCIMIENTO ");
                 System.out.printf("Préstamo ID: %s%n", p.getId());
                 System.out.printf("Usuario: %s%n", p.getUsuario().getNombre());
                 System.out.printf("Recurso: %s%n", recurso);
