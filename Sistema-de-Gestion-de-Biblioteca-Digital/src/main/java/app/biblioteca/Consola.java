@@ -1,5 +1,6 @@
 package app.biblioteca;
 
+import app.biblioteca.alertas.AlertaVencimiento;
 import app.biblioteca.excepciones.*;
 import app.biblioteca.gestores.*;
 import app.biblioteca.recursos.*;
@@ -16,6 +17,7 @@ public class Consola {
     private final GestorPrestamos gestorPrestamos = new GestorPrestamos(gestorUsuarios, gestorRecursos, notificaciones);
     private final GestorReservas gestorReservas = new GestorReservas(gestorUsuarios, gestorRecursos, notificaciones, gestorPrestamos);
     private final GestorReportes gestorReportes = new GestorReportes(gestorPrestamos, gestorUsuarios);
+    private final AlertaVencimiento alerta = new AlertaVencimiento(gestorPrestamos);
 
     private int leerEntero(Scanner scanner, String prompt, int min, int max) {
         while (true) {
@@ -49,9 +51,10 @@ public class Consola {
             System.out.println("4. Gestionar Reservas");
             System.out.println("5. Ver Historial de Notificaciones");
             System.out.println("6. Ver Reportes");
-            System.out.println("7. Probar concurrencia");
-            System.out.println("8. Salir");
-            int op = leerEntero(scanner, "Seleccione una opción: ", 1, 8);
+            System.out.println("7. Ver Alertas de Vencimientos");
+            System.out.println("8. Probar concurrencia");
+            System.out.println("9. Salir");
+            int op = leerEntero(scanner, "Seleccione una opción: ", 1, 9);
 
             switch (op) {
                 case 1 -> menuUsuarios(scanner);
@@ -64,8 +67,9 @@ public class Consola {
                             .forEach(System.out::println);
                 }
                 case 6 -> menuReportes(scanner);
-                case 7 -> menuConcurrencia(scanner);
-                case 8 -> {
+                case 7 -> alerta.verificarAlertas(scanner);
+                case 8 -> menuConcurrencia(scanner);
+                case 9 -> {
                     notificaciones.shutdown();  // cerramos el pool antes de terminar
                     System.out.println("¡Hasta luego!");
                     return;
