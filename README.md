@@ -1,29 +1,6 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/tc38IXJF)
 # 📚 Trabajo Práctico: Sistema de Gestión de Biblioteca Digital (Java 21+)
 
-## 📑 Índice
-
-- [📌 Objetivo General](#-objetivo-general)
-- [👨‍🎓 Información del Alumno](#-información-del-alumno)
-- [📘 Consigna del Trabajo](#-consigna-del-trabajo)
-- [🚀 Consola - Punto de Entrada del Sistema](#-consola---punto-de-entrada-del-sistema)
-- [🚨 Alertas](#-alertas)
-- [🛑 Excepciones](#-excepciones)
-- [🛠️ Gestores](#-gestores)
-- [🧩 Interfaces](#-interfaces)
-- [📚 Recursos](#-recursos)
-- [⚙️ Servicios](#-servicios)
-- [🤖 Uso de Inteligencia Artificial](#-uso-de-inteligencia-artificial)
-
-## 📌 Objetivo General
-
-Desarrollar un sistema de gestión de biblioteca digital que implemente los cinco principios SOLID, programación orientada a objetos, y conceptos avanzados de Java. El sistema deberá manejar diferentes tipos de recursos digitales, préstamos, reservas, y notificaciones en tiempo real.
-
-## 👨‍🎓 Información del Alumno
-- **Nombre y Apellido**: Abel Carrizo
-
-## 📘 Consigna del Trabajo
-
 <details>
 <summary>📋<strong>Haz clic aquí para ver la consigna completa</strong></summary>
 
@@ -413,6 +390,28 @@ El uso inadecuado de IA puede resultar en:
 Este trabajo es parte del curso de Programación Avanzada de Ingeniería en Informática. Uso educativo únicamente.
 
 </details>
+
+## 📑 Índice
+
+- [📌 Objetivo General](#-objetivo-general)
+- [👨‍🎓 Información del Alumno](#-información-del-alumno)
+- [🚀 Consola - Punto de Entrada del Sistema](#-consola---punto-de-entrada-del-sistema)
+- [🚨 Alertas](#-alertas)
+- [🛑 Excepciones](#-excepciones)
+- [🛠️ Gestores](#-gestores)
+- [🧩 Interfaces](#-interfaces)
+- [📚 Recursos](#-recursos)
+- [⚙️ Servicios](#-servicios)
+- [🤖 Asistencia de IA en el desarrollo](#-asistencia-de-ia-en-el-desarrollo)
+
+## 📌 Objetivo General
+
+Desarrollar un sistema de gestión de biblioteca digital que implemente los cinco principios SOLID, programación orientada a objetos, y conceptos avanzados de Java. El sistema deberá manejar diferentes tipos de recursos digitales, préstamos, reservas, y notificaciones en tiempo real.
+
+---
+
+## 👨‍🎓 Información del Alumno
+- **Nombre y Apellido**: Abel Carrizo
 
 ---
 
@@ -869,8 +868,7 @@ Incluye `getEtiqueta()` para obtener la cadena legible en consola.
 
 ---
 
-## 🤖 Uso de Inteligencia Artificial
-
+## 🤖 Asistencia de IA en el desarrollo
 Para mantener la transparencia, documento a continuación de forma resumida y equilibrada las ocasiones en que he utilizado IA (ChatGPT) durante el desarrollo:
 
 ### Transparencia
