@@ -17,7 +17,7 @@ public class GestorUsuarios {
 
     public void agregarUsuario(Usuario usuario) {
         usuarios.put(usuario.getId(), usuario);
-        notificaciones.notificar("Usuario creado: " + usuario.getNombre());
+        notificaciones.notificar("Usuario: " + usuario.getNombre() + " creado exitosamente");
     }
 
     public Usuario buscarPorId(String id) {
