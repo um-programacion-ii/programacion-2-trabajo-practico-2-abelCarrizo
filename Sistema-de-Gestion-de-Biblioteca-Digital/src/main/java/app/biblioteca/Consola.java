@@ -420,23 +420,6 @@ public class Consola {
         }
     }
 
-    private void menuConfiguracionRecordatorios(Scanner scanner) {
-        System.out.println("\n--- Configurar Recordatorios ---");
-        NivelUrgencia[] niveles = NivelUrgencia.values();
-        for (int i = 0; i < niveles.length; i++) {
-            boolean on = gestorRecordatorios.getPreferencias().get(niveles[i]);
-            System.out.printf("%d. %s [%s]%n", i+1, niveles[i].getEtiqueta(), on ? "ON" : "OFF");
-        }
-        System.out.printf("%d. Volver%n", niveles.length+1);
-        int sel = leerEntero(scanner, "Nivel a (des)activar: ", 1, niveles.length+1);
-        if (sel <= niveles.length) {
-            NivelUrgencia elegido = niveles[sel-1];
-            boolean actual = gestorRecordatorios.getPreferencias().get(elegido);
-            gestorRecordatorios.configurar(elegido, !actual);
-        }
-    }
-
-
     private void simularAlertaVencimiento(Scanner scanner) {
         System.out.println("\n== Simulación de Alerta de Vencimiento ==");
 
