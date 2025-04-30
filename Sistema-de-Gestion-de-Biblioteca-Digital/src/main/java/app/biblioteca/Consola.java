@@ -10,7 +10,10 @@ import app.biblioteca.servicios.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 public class Consola {
     private final GestorNotificaciones notificaciones = new GestorNotificaciones(List.of(new ServicioNotificacionesEmail(),  new ServicioNotificacionesSMS()));
@@ -18,7 +21,7 @@ public class Consola {
     private final GestorUsuarios gestorUsuarios = new GestorUsuarios(notificaciones);
     private final GestorPrestamos gestorPrestamos = new GestorPrestamos(gestorUsuarios, gestorRecursos, notificaciones);
     private final GestorReservas gestorReservas = new GestorReservas(gestorUsuarios, gestorRecursos, notificaciones, gestorPrestamos);
-    private final GestorReportes gestorReportes = new GestorReportes(gestorPrestamos, gestorUsuarios);
+    private final GestorReportes gestorReportes = new GestorReportes(gestorPrestamos);
     private final GestorRecordatorios gestorRecordatorios = new GestorRecordatorios();
     private final AlertaVencimiento alertaVencimiento = new AlertaVencimiento(gestorPrestamos, gestorRecordatorios);
     private final AlertaDisponibilidad alertaDisponibilidad = new AlertaDisponibilidad(gestorReservas, gestorPrestamos, gestorRecordatorios);
@@ -70,6 +73,7 @@ public class Consola {
                 case 7 -> menuAlertas(scanner);
                 case 8 -> menuConcurrencia(scanner);
                 case 9 -> {
+                    gestorReportes.shutdown();
                     notificaciones.shutdown();  // cerramos el pool antes de terminar
                     System.out.println("¡Hasta luego!");
                     return;
@@ -339,42 +343,48 @@ public class Consola {
 
     private void menuReportes(Scanner scanner) {
         while (true) {
-            System.out.println("\n--- Reportes ---");
+            System.out.println("\n--- Reportes (asíncronos) ---");
             System.out.println("1. Top Recursos Prestados");
             System.out.println("2. Top Usuarios Activos");
             System.out.println("3. Estadísticas por Categoría");
             System.out.println("4. Volver");
             int op = leerEntero(scanner, "Seleccione una opción: ", 1, 4);
 
-            switch (op) {
-                case 1 -> {
-                    int n = leerEntero(scanner, "¿Cuántos top recursos mostrar? ", 1, Integer.MAX_VALUE);
-                    var topRec = gestorReportes.recursosMasPrestados(n);
-                    System.out.println("== Recursos más prestados ==");
-                    for (var e : topRec) {
-                        System.out.printf("%s → %d veces%n",
-                                e.getKey().getTitulo(), e.getValue());
+            try {
+                switch (op) {
+                    case 1 -> {
+                        int n = leerEntero(scanner, "¿Cuántos top recursos mostrar? ", 1, Integer.MAX_VALUE);
+                        Future<List<Map.Entry<RecursoDigital, Long>>> fRec = gestorReportes.recursosMasPrestadosAsync(n);
+                        System.out.println("Generando reporte de recursos más prestados...");
+                        List<Map.Entry<RecursoDigital, Long>> topRec = fRec.get();  // bloquea hasta terminar
+                        System.out.println("== Recursos más prestados ==");
+                        topRec.forEach(e ->
+                                System.out.printf("%s → %d veces%n", e.getKey().getTitulo(), e.getValue())
+                        );
                     }
-                }
-                case 2 -> {
-                    int n = leerEntero(scanner, "¿Cuántos top usuarios mostrar? ", 1, Integer.MAX_VALUE);
-                    var topUsu = gestorReportes.usuariosMasActivos(n);
-                    System.out.println("== Usuarios más activos ==");
-                    for (var e : topUsu) {
-                        System.out.printf("%s → %d préstamos%n",
-                                e.getKey().getNombre(), e.getValue());
+                    case 2 -> {
+                        int n = leerEntero(scanner, "¿Cuántos top usuarios mostrar? ", 1, Integer.MAX_VALUE);
+                        Future<List<Map.Entry<Usuario, Long>>> fUsu = gestorReportes.usuariosMasActivosAsync(n);
+                        System.out.println("Generando reporte de usuarios más activos...");
+                        List<Map.Entry<Usuario, Long>> topUsu = fUsu.get();
+                        System.out.println("== Usuarios más activos ==");
+                        topUsu.forEach(e ->
+                                System.out.printf("%s → %d préstamos%n", e.getKey().getNombre(), e.getValue())
+                        );
                     }
+                    case 3 -> {
+                        Future<Map<CategoriaRecurso, Long>> fCat = gestorReportes.usoPorCategoriaAsync();
+                        System.out.println("Generando estadísticas por categoría...");
+                        Map<CategoriaRecurso, Long> stats = fCat.get();
+                        System.out.println("== Uso por Categoría ==");
+                        stats.forEach((cat, cnt) ->
+                                System.out.printf("%s: %d préstamos%n", cat, cnt)
+                        );
+                    }
+                    case 4 -> { return; }
                 }
-                case 3 -> {
-                    var stats = gestorReportes.usoPorCategoria();
-                    System.out.println("== Uso por Categoría ==");
-                    stats.forEach((cat, cnt) ->
-                            System.out.printf("%s: %d préstamos%n", cat, cnt)
-                    );
-                }
-                case 4 -> {
-                    return;
-                }
+            } catch (InterruptedException | ExecutionException e) {
+                System.out.println("Error al generar el reporte: " + e.getMessage());
             }
         }
     }
